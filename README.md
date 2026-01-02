@@ -1,18 +1,25 @@
-# WiringPi Library
+# WiringPi BSD Library
 
-Welcome to the WiringPi Library, the highly performant GPIO access library for Raspberry Pi boards. This library is written in C and is designed to provide fast and efficient control of the GPIO pins by directly accessing the hardware registers using DMA. 
+This is a work in progress attempt to port the WiringPi library to BSD
+based operating systems. Documentation will be unreliable/inconsistent
+until the port is completed.
 
-**Key Features:**  
+Welcome to the WiringPi Library, the highly performant GPIO access library
+for Raspberry Pi boards. This library is written in C and is designed to
+provide fast and efficient control of the GPIO pins by directly accessing
+the hardware registers using DMA. 
 
-- **Support:** WiringPi supports all Raspberry Pi Boards including Pi 5 ( :construction: On the Pi 5, only the GCLK functionality is currently not supported due to missing documentation of the RP1 chip).
-- **High Performance:** By directly accessing the hardware registers, WiringPi ensures minimal latency and maximum performance for your GPIO operations.
-- **Wide Adoption:** WiringPi is widely used in numerous projects, making it a reliable choice for your Raspberry Pi GPIO needs.
-
-Whether you’re working on a simple LED blink project or a complex automation system, WiringPi provides the tools you need to get the job done efficiently.
+## BSD Port Milestones
+ - [ ] Compiles for NetBSD
+ - [ ] Compiles for OpenBSD
+ - [ ] Compiles for FreeBSD
+ - [ ] Examples work as expected
+ - [ ] Documentation updated where relevant
 
 ## How to use
 
-To compile programs with wiringPi Library, you need to include `wiringPi.h` as well as link against `wiringPi`:
+To compile programs with wiringPi Library, you need to include `wiringPi.h`
+as well as link against `wiringPi`:
 
 ```c
 #include <wiringPi.h> // Include WiringPi library!
@@ -52,7 +59,8 @@ cd examples
 make <example-name | really-all>
 ```
 
-To use WiringPi in a project with CMake, the following snippet is all that is required provided that WiringPi is installed.
+To use WiringPi in a project with CMake, the following snippet is all that
+is required provided that WiringPi is installed.
 
 ```CMake
 add_executable(example
@@ -66,7 +74,8 @@ target_link_libraries(
 )
 ```
 
-The tool `gpio` can be used to set single pins as well as get the state of everything at once:
+The tool `gpio` can be used to set single pins as well as get the state of
+everything at once:
 
 ```none
 pi@wiringdemo:~ $ gpio readall
@@ -103,79 +112,27 @@ pi@wiringdemo:~ $ gpio readall
 [German](./documentation/deutsch/functions.md)  
 [English](./documentation/english/functions.md)
 
-## Installing
-
-You can either build it yourself or use the prebuilt binaries:
-
-### From Source
-
-1. create debian-package
-
-```sh
-# fetch the source
-sudo apt install git
-git clone https://github.com/WiringPi/WiringPi.git
-cd WiringPi
-
-# build the package
-./build debian
-mv debian-template/wiringpi-3.x.deb .
-
-# install it
-sudo apt install ./wiringpi-3.x.deb
-```
-
-### Prebuilt Binaries
-
-Grab the latest release from [here](https://github.com/WiringPi/WiringPi/releases).
-
-Unzip/use the portable prebuilt verison:
-
-```sh
-# unzip the archive
-tar -xfv wiringpi_3.x.tar.gz
-```
-
-Install the debian package:
-
-```sh
-# install a dpkg
-sudo apt install ./wiringpi-3.x.deb
-```
-
-## Ports
-
-wiringPi has been wrapped for multiple languages: 
-
-NOTE: these wrappers are _not_ updated and maintained in sync with WiringPi version 3+,
-therefore we cannot guarantee functionality or provide support for a specific implementation.
-
-- Node - [https://github.com/WiringPi/WiringPi-Node](https://github.com/WiringPi/WiringPi-Node)
-- Perl - [https://github.com/WiringPi/WiringPi-Perl](https://github.com/WiringPi/WiringPi-Perl)
-- PHP - [https://github.com/WiringPi/WiringPi-PHP](https://github.com/WiringPi/WiringPi-PHP)
-- Python - [https://github.com/WiringPi/WiringPi-Python](https://github.com/WiringPi/WiringPi-Python)
-- Ruby - [https://github.com/WiringPi/WiringPi-Ruby](https://github.com/WiringPi/WiringPi-Ruby)
-
 ## Support
 
-Please use the [issue system](https://github.com/WiringPi/WiringPi/issues) of GitHub.
-
-If you're not sure whether to create an issue or not, please engage in [discussions](https://github.com/WiringPi/WiringPi/discussions)!
-
-Please do not email Gordon or @Gadgetoid.
-
-Please don't email GC2 for reporting issues, you might [contact us](mailto:wiringpi@gc2.at) for anything that's not meant for the public.
+Please do not email any of the original WiringPi devlopers (Gordon, or GC2).
+This fork/BSD port building on the work of the WiringPi devlopers is entirely
+the work of [Roos](https://github.com/Roocatt) and any concerns or issues
+should be directed to her. The best way to bring issues with this WiringPi
+port to Roos's attention is to open an
+[issue on the Github repo](https://github.com/Roocatt/WiringPi/issues/new)
 
 ## History
 
-This repository is the continuation of 'Gordon's wiringPi 2.5' which has been [deprecated](https://web.archive.org/web/20220405225008/http://wiringpi.com/wiringpi-deprecated/), a while ago.
+This repository is a fork of the GC2 continuation of 'Gordon's wiringPi 2.5'
+which has been [deprecated](https://web.archive.org/web/20220405225008/http://wiringpi.com/wiringpi-deprecated/), a while ago.
 
 - The last "old wiringPi" source of Gordon's release can be found at the
   [`final_source_2.50`](https://github.com/WiringPi/WiringPi/tree/final_official_2.50) tag.
-- The default `master` branch contains code that has been written since version 2.5
-  to provide support for newer hardware as well as new features.
+- The default `master` branch contains code that has been written since
+  January 2, 2026 when it was forked from the GC2 repo.
 
-:information_source:️ Since 2024, [GC2](https://github.com/GrazerComputerClub) has taken over maintenance of the project, supporting new OS versions as well as current hardware generations. We are dedicated to keeping the arguably best-performing GPIO Library for Raspberry Pi running smoothly. We strive to do our best, but please note that this is a community effort, and we cannot provide any guarantees or take responsibility for implementing specific features you may need.
+Since 2024, [GC2](https://github.com/GrazerComputerClub) has taken over
+maintenance of the WiringPi project from which this was forked.
 
 ## Debug
 
