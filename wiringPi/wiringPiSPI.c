@@ -31,8 +31,6 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/ioctl.h>
-#include <asm/ioctl.h>
-#include <linux/spi/spidev.h>
 #include "wiringPi.h"
 #include "wiringPiSPI.h"
 

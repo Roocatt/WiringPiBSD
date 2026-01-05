@@ -36,7 +36,6 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <linux/spi/spidev.h>
 
 #include <wiringPi.h>
 #include <wiringPiSPI.h>

@@ -936,7 +936,7 @@ static void doVersion (char *argv [])
     printf ("  * Device tree present.\n") ;
   }
   if (stat ("/proc/device-tree/model", &statBuf) == 0)	// Output Kernel idea of board type
-  {
+  {/* TODO BSD compat */
     if ((fd = fopen ("/proc/device-tree/model", "r")) != NULL)
     {
       if (fgets(name, sizeof(name), fd) == NULL) {

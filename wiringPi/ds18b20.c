@@ -38,6 +38,7 @@
 
 #include "ds18b20.h"
 
+/* TODO BSD compat */
 #define	W1_PREFIX	"/sys/bus/w1/devices/28-"
 #define	W1_POSTFIX	"/w1_slave"
 

@@ -86,7 +86,7 @@ int main (void)
 
 // Switch to SYS mode: -> character device ABI
 
-  printf ("\n/sys/class/gpio method: (%8d iterations)\n", SLOW_COUNT) ;
+  printf ("\n/sys/class/gpio method: (%8d iterations)\n", SLOW_COUNT) ; /* TODO BSD compat */
   wiringPiSetupSys () ;
   speedTest (17, SLOW_COUNT) ;
 

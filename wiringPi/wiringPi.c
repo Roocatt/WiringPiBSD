@@ -70,10 +70,8 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <sys/ioctl.h>
-#include <asm/ioctl.h>
 #include <byteswap.h>
 #include <sys/utsname.h>
-#include <linux/gpio.h>
 #include <dirent.h>
 #include <inttypes.h>
 
@@ -229,7 +227,7 @@ const char* gpiomem_RP1       = "/dev/gpiomem0";
 const int   gpiomem_RP1_Size  = 0x00030000;
 // PCIe memory access, need to detect path / PCIe address
 //dmesg: rp1 0000:01:00.0: bar1 len 0x400000, start 0x1f00000000, end 0x1f003fffff, flags, 0x40200
-const char* pcie_path         = "/sys/bus/pci/devices";
+const char* pcie_path         = "/sys/bus/pci/devices"; /* TODO BSD compat */
 //const char* pciemem_RP1_path  = "/sys/bus/pci/devices/0000:01:00.0";
 //const char* pciemem_RP1       = "/sys/bus/pci/devices/0000:01:00.0/resource1";
 char pciemem_RP1[512] = { '\0' };
@@ -1028,7 +1026,7 @@ void ReportDeviceError(const char *function, int pin, const char *mode, int ret)
  *
  *********************************************************************************
  */
- const char* revfile = "/proc/device-tree/system/linux,revision";
+ const char* revfile = "/proc/device-tree/system/linux,revision";/* TODO not BSD compatible */
 
 void piGpioLayoutOops (const char *why)
 {

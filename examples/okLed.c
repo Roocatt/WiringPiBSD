@@ -51,7 +51,7 @@ int main ()
 
 // Change the trigger on the OK/Act LED to "none"
 
-  if ((fd = open ("/sys/class/leds/led0/trigger", O_RDWR)) < 0)
+  if ((fd = open ("/sys/class/leds/led0/trigger", O_RDWR)) < 0) /* TODO BSD compat */
   {
     fprintf (stderr, "Unable to change LED trigger: %s\n", strerror (errno)) ;
     return 1 ;
