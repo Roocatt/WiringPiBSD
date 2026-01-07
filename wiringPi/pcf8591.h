@@ -22,12 +22,17 @@
  ***********************************************************************
  */
 
+#ifndef __PCF8591_H__
+#define __PCF8591_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int pcf8591Setup (const int pinBase, const int i2cAddress) ;
+extern int	pcf8591Setup(const int, const int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __PCF8591_H__ */

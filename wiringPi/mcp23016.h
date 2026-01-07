@@ -22,12 +22,17 @@
  ***********************************************************************
  */
 
+#ifndef __MCP23016_H__
+#define __MCP23016_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int mcp23016Setup (const int pinBase, const int i2cAddress) ;
+extern int	mcp23016Setup(const int, const int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __MCP23016_H__ */

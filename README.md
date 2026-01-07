@@ -13,6 +13,7 @@ the hardware registers using DMA.
  - [ ] Compiles for NetBSD
  - [ ] Compiles for OpenBSD
  - [ ] Compiles for FreeBSD
+ - [ ] Tests work as expected
  - [ ] Examples work as expected
  - [ ] Documentation updated where relevant
 
@@ -112,10 +113,41 @@ pi@wiringdemo:~ $ gpio readall
 [German](./documentation/deutsch/functions.md)  
 [English](./documentation/english/functions.md)
 
+## Porting Information
+
+### Backporting Future Changes from WiringPi
+As the GC2 maintained WiringPi is still under development, as is the RaspberryPi
+itself with new hardware versions, there will inevitably be new development done
+after the fork. Due to a variety of code changes here, simply merging from the original
+git repo is unlikely to work. This means that changes must be manually re-implemented
+here. If there is a change that is missing here, opening an issue on the Github repo
+(see support section) to bring attention to that is encouraged.
+
+### BSD Target
+The goal is specifically to support OpenBSD, NetBSD and FreeBSD. Wherever possible,
+any code should be compatible with all of those targets and not using OS specific
+features unique to an individual BSD OS, even when there may be notable advantages
+to using such OS specific features. Though, obviously where a generic solution
+is not possible, `#ifdef` may be used to differentiate. Optional features which can
+add extra functionality if it is available (such as OpenBSD's pledge) are an obvious
+exception to this and these features should be used where possible.
+
+### Code Style
+The new code style is BSD KNF as defined in OpenBSD's style(9). Any file that has not
+been touched yet as part of the porting process can be left in the original code style
+for the time being.
+
+### Headers
+The original pre-port WiringPi almost never uses header guards. While the code was
+architected in such a way that this didn't cause issues, the new approach is such
+that *ALL* headers should use header guards regardless of necessity. This also means
+that there is no longer any requirement for code to be structured such that header
+guards aren't required for any new code or refactoring.
+
 ## Support
 
-Please do not email any of the original WiringPi devlopers (Gordon, or GC2).
-This fork/BSD port building on the work of the WiringPi devlopers is entirely
+Please do not contact any of the original WiringPi developers (Gordon, or GC2).
+This fork/BSD port building on the work of the WiringPi developers is entirely
 the work of [Roos](https://github.com/Roocatt) and any concerns or issues
 should be directed to her. The best way to bring issues with this WiringPi
 port to Roos's attention is to open an
@@ -129,7 +161,8 @@ which has been [deprecated](https://web.archive.org/web/20220405225008/http://wi
 - The last "old wiringPi" source of Gordon's release can be found at the
   [`final_source_2.50`](https://github.com/WiringPi/WiringPi/tree/final_official_2.50) tag.
 - The default `master` branch contains code that has been written since
-  January 2, 2026 when it was forked from the GC2 repo.
+  January 2, 2026 when it was forked from the GC2 repo. The version at the
+  time of the fork in the GC2 maintained repo was 3.16.
 
 Since 2024, [GC2](https://github.com/GrazerComputerClub) has taken over
 maintenance of the WiringPi project from which this was forked.

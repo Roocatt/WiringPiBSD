@@ -22,12 +22,17 @@
  ***********************************************************************
  */
 
+#ifndef __SN3218_H__
+#define __SN3218_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int sn3218Setup (int pinBase) ;
+extern int	sn3218Setup(int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __SN3218_H__ */

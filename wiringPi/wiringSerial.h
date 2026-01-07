@@ -20,19 +20,24 @@
  ***********************************************************************
  */
 
+#ifndef __WIRINGSERIAL_H__
+#define __WIRINGSERIAL_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int   serialOpen      (const char *device, const int baud) ;
-extern void  serialClose     (const int fd) ;
-extern void  serialFlush     (const int fd) ;
-extern void  serialPutchar   (const int fd, const unsigned char c) ;
-extern void  serialPuts      (const int fd, const char *s) ;
-extern void  serialPrintf    (const int fd, const char *message, ...) ;
-extern int   serialDataAvail (const int fd) ;
-extern int   serialGetchar   (const int fd) ;
+extern int serialOpen(const char *, const int);
+extern void serialClose(const int);
+extern void serialFlush(const int);
+extern void serialPutchar(const int, const unsigned char);
+extern void serialPuts(const int, const char *);
+extern void serialPrintf(const int, const char *, ...);
+extern int serialDataAvail(const int);
+extern int serialGetchar(const int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __WIRINGSERIAL_H__ */

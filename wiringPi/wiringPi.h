@@ -209,13 +209,13 @@ extern "C" {
 // Data
 
 // Internal
-extern void piGpioLayoutOops(const char *why);
-extern int wiringPiFailure(int fatal, const char *message, ...);
+extern void piGpioLayoutOops(const char *);
+extern int wiringPiFailure(int, const char *, ...);
 
 // Core wiringPi functions
 
-extern struct wiringPiNodeStruct *wiringPiFindNode(int pin);
-extern struct wiringPiNodeStruct *wiringPiNewNode(int pinBase, int numPins);
+extern struct wiringPiNodeStruct *wiringPiFindNode(int);
+extern struct wiringPiNodeStruct *wiringPiNewNode(int, int);
 
 enum WPIPinType {
 	WPI_PIN_BCM = 1,
@@ -223,15 +223,15 @@ enum WPIPinType {
 	WPI_PIN_PHYS,
 };
 
-extern void wiringPiVersion(int *major, int *minor);
-extern int wiringPiGlobalMemoryAccess(void); // Interface V3.3
-extern int wiringPiUserLevelAccess(void);
-extern int wiringPiSetup(void);
-extern int wiringPiSetupSys(void);
-extern int wiringPiSetupGpio(void);
-extern int wiringPiSetupPhys(void);
-extern int wiringPiSetupPinType(enum WPIPinType pinType); // Interface V3.3
-extern int wiringPiSetupGpioDevice(enum WPIPinType pinType); // Interface V3.3
+extern void	wiringPiVersion(int *, int *);
+extern int	wiringPiGlobalMemoryAccess(void); // Interface V3.3
+extern int	wiringPiUserLevelAccess(void);
+extern int	wiringPiSetup(void);
+extern int	wiringPiSetupSys(void);
+extern int	wiringPiSetupGpio(void);
+extern int	wiringPiSetupPhys(void);
+extern int	wiringPiSetupPinType(enum WPIPinType); // Interface V3.3
+extern int	wiringPiSetupGpioDevice(enum WPIPinType); // Interface V3.3
 
 
 enum WPIPinAlt {
@@ -252,44 +252,44 @@ enum WPIPinAlt {
 };
 
 
-extern int wiringPiGpioDeviceGetFd(); // Interface V3.3
-extern void pinModeAlt(int pin, int mode);
-extern enum WPIPinAlt getPinModeAlt(int pin); // Interface V3.5, same as getAlt but wie enum
-extern void pinMode(int pin, int mode);
-extern void pullUpDnControl(int pin, int pud);
-extern int digitalRead(int pin);
-extern void digitalWrite(int pin, int value);
-extern void pwmWrite(int pin, int value);
-extern int analogRead(int pin);
-extern void analogWrite(int pin, int value);
+extern int	wiringPiGpioDeviceGetFd(); // Interface V3.3
+extern void	pinModeAlt(int, int);
+extern enum	WPIPinAlt getPinModeAlt(int); // Interface V3.5, same as getAlt but wie enum
+extern void	pinMode(int, int);
+extern void	pullUpDnControl(int, int);
+extern int	digitalRead(int);
+extern void	digitalWrite(int, int);
+extern void	pwmWrite(int, int);
+extern int	analogRead(int);
+extern void	analogWrite(int, int);
 
 // PiFace specifics
 //	(Deprecated)
 
-extern int wiringPiSetupPiFace(void);
-extern int wiringPiSetupPiFaceForGpioProg(void); // Don't use this - for gpio program only
+extern int	wiringPiSetupPiFace(void);
+extern int	wiringPiSetupPiFaceForGpioProg(void); // Don't use this - for gpio program only
 
 // On-Board Raspberry Pi hardware specific stuff
 
-extern int piGpioLayout(void);
-extern int piBoardRev(void); // Deprecated, but does the same as piGpioLayout
-extern void piBoardId(int *model, int *rev, int *mem, int *maker, int *overVolted);
-extern int piBoard40Pin(void); // Interface V3.7
-extern int piRP1Model(void); // Interface V3.14
-extern int wpiPinToGpio(int wpiPin); // please don't use outside 0-63 and on RP1
-extern int physPinToGpio(int physPin); // please don't use outside 0-63 and on RP1
-extern void setPadDrive(int group, int value);
-extern void setPadDrivePin(int pin, int value); // Interface V3.0
-extern int getAlt(int pin);
-extern void pwmToneWrite(int pin, int freq);
-extern void pwmSetMode(int mode);
-extern void pwmSetRange(unsigned int range);
-extern void pwmSetClock(int divisor);
-extern void gpioClockSet(int pin, int freq);
-extern unsigned int digitalReadByte(void);
-extern unsigned int digitalReadByte2(void);
-extern void digitalWriteByte(int value);
-extern void digitalWriteByte2(int value);
+extern int		piGpioLayout(void);
+extern int		piBoardRev(void); // Deprecated, but does the same as piGpioLayout
+extern void		piBoardId(int *, int *, int *, int *, int *);
+extern int		piBoard40Pin(void); // Interface V3.7
+extern int		piRP1Model(void); // Interface V3.14
+extern int		wpiPinToGpio(int); // please don't use outside 0-63 and on RP1
+extern int		physPinToGpio(int); // please don't use outside 0-63 and on RP1
+extern void		setPadDrive(int group, int);
+extern void		setPadDrivePin(int, int); // Interface V3.0
+extern int		getAlt(int);
+extern void		pwmToneWrite(int, int);
+extern void		pwmSetMode(int);
+extern void		pwmSetRange(unsigned int);
+extern void		pwmSetClock(int);
+extern void		gpioClockSet(int, int);
+extern unsigned int	digitalReadByte(void);
+extern unsigned int	digitalReadByte2(void);
+extern void		digitalWriteByte(int);
+extern void		digitalWriteByte2(int);
 
 // Interrupts
 // status returned from waitForInterruptV2    V3.16
@@ -303,34 +303,33 @@ struct WPIWfiStatus {
 
 // extern int  waitForInterrupt    (int pin, int ms);  unknown if still working, disabled for V3.16, please contact
 // developer via github
-extern int wiringPiISR(int pin, int mode, void (*function)(void));
-extern struct WPIWfiStatus waitForInterrupt2(int pin, int edgeMode, int ms, unsigned long debounce_period_us); // V3.16
-extern int wiringPiISR2(int pin, int edgeMode, void (*function)(struct WPIWfiStatus wfiStatus, void *userdata),
-			unsigned long debounce_period_us, void *userdata); // V3.16
-extern int wiringPiISRStop(int pin); // V3.2
-extern int waitForInterruptClose(int pin); // V3.2 legacy use wiringPiISRStop
+extern int		wiringPiISR(int, int, void (*function)(void));
+extern struct WPIWfiStatus	waitForInterrupt2(int, int, int, unsigned long); // V3.16
+extern int		wiringPiISR2(int, int, void (*function)(struct WPIWfiStatus, void *), unsigned long, void *); // V3.16
+extern int		wiringPiISRStop(int); // V3.2
+extern int		waitForInterruptClose(int); // V3.2 legacy use wiringPiISRStop
 
 // Threads
 
-extern int piThreadCreate(void *(*fn)(void *) );
-extern void piLock(int key);
-extern void piUnlock(int key);
+extern int	piThreadCreate(void *(*fn)(void *) );
+extern void	piLock(int);
+extern void	piUnlock(int);
 
 // Schedulling priority
 
-extern int piHiPri(const int pri);
+extern int	piHiPri(const int);
 
 // Extras from arduino land
 
-extern void delay(unsigned int ms);
-extern void delayMicroseconds(unsigned int us);
-extern unsigned int millis(void);
-extern unsigned int micros(void);
+extern void		delay(unsigned int);
+extern void		delayMicroseconds(unsigned int);
+extern unsigned int	millis(void);
+extern unsigned int	micros(void);
 
-extern unsigned long long piMicros64(void); // Interface V3.7
+extern unsigned long long	piMicros64(void); // Interface V3.7
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* __WIRING_PI_H__ */

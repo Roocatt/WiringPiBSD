@@ -23,4 +23,17 @@
  ***********************************************************************
  */
 
-extern int pseudoPinsSetup (const int pinBase) ;
+#ifndef __PSEUDO_PINS_H__
+#define __PSEUDO_PINS_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern int	pseudoPinsSetup(const int);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __PSEUDO_PINS_H__ */

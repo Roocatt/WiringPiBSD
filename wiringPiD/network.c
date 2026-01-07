@@ -22,46 +22,45 @@
  */
 
 #include <sys/socket.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+#include <malloc.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <stdarg.h>
-#include <malloc.h>
-
-#include <fcntl.h>
+#include <unistd.h>
 #include <crypt.h>
+#include <fcntl.h>
 
 #include "network.h"
 
-#define	TRUE	(1==1)
-#define	FALSE	(!TRUE)
+#define TRUE (1 == 1)
+#define FALSE (!TRUE)
 
 // Local data
 
-#define	SALT_LEN	16
+#define SALT_LEN 16
 
-static char salt [SALT_LEN + 1] ;
-static char *returnedHash = NULL ;
-static int serverFd = -1 ;
+static char salt[SALT_LEN + 1];
+static char *returnedHash = NULL;
+static int serverFd = -1;
 
 // Union for the server Socket Address
 
-static union
-{
-  struct sockaddr_in  sin ;
-  struct sockaddr_in6 sin6 ;
-} serverSockAddr ; 
+static union {
+	struct sockaddr_in sin;
+	struct sockaddr_in6 sin6;
+} serverSockAddr;
 
 // and client address
 
-static union
-{
-  struct sockaddr_in  sin ;
-  struct sockaddr_in6 sin6 ;
-} clientSockAddr ;
+static union {
+	struct sockaddr_in sin;
+	struct sockaddr_in6 sin6;
+} clientSockAddr;
 
 
 /*
@@ -69,37 +68,33 @@ static union
  *	Returns a pointer to a static string containing the clients IP address
  *********************************************************************************
  */
-
-char *getClientIP (void)
+char *
+getClientIP(void)
 {
-  char buf [INET6_ADDRSTRLEN] ;
-  static char ipAddress [1024] ;
+	char buf[INET6_ADDRSTRLEN];
+	static char ipAddress[1024];
 
-  if (clientSockAddr.sin.sin_family == AF_INET)	// IPv4
-  {
-    if (snprintf (ipAddress, 1024, "IPv4: %s", 
-	inet_ntop (clientSockAddr.sin.sin_family, (void *)&clientSockAddr.sin.sin_addr, buf, sizeof (buf))) == 1024)
-      strcpy (ipAddress, "Too long") ;
-  }
-  else						// IPv6
-  {
-    if (clientSockAddr.sin.sin_family == AF_INET6 && IN6_IS_ADDR_V4MAPPED (&clientSockAddr.sin6.sin6_addr))
-    {
-      if (snprintf (ipAddress, 1024, "IPv4in6: %s", 
-	inet_ntop (clientSockAddr.sin.sin_family, (char *)&clientSockAddr.sin6.sin6_addr, buf, sizeof(buf))) == 1024)
-      strcpy (ipAddress, "Too long") ;
-    }
-    else
-    {
-      if (snprintf (ipAddress, 1024, "IPv6: %s", 
-	inet_ntop (clientSockAddr.sin.sin_family, (char *)&clientSockAddr.sin6.sin6_addr, buf, sizeof(buf))) == 1024)
-      strcpy (ipAddress, "Too long") ;
-    }
-  }
+	if (clientSockAddr.sin.sin_family == AF_INET) { /* IPv4 */
+		if (snprintf(ipAddress, 1024, "IPv4: %s",
+			     inet_ntop(clientSockAddr.sin.sin_family, (void *) &clientSockAddr.sin.sin_addr, buf,
+				       sizeof(buf))) == 1024)
+			strcpy(ipAddress, "Too long");
+	} else { /* IPv6 */
+		if (clientSockAddr.sin.sin_family == AF_INET6 && IN6_IS_ADDR_V4MAPPED(&clientSockAddr.sin6.sin6_addr)) {
+			if (snprintf(ipAddress, 1024, "IPv4in6: %s",
+				     inet_ntop(clientSockAddr.sin.sin_family, (char *) &clientSockAddr.sin6.sin6_addr,
+					       buf, sizeof(buf))) == 1024)
+				strcpy(ipAddress, "Too long");
+		} else {
+			if (snprintf(ipAddress, 1024, "IPv6: %s",
+				     inet_ntop(clientSockAddr.sin.sin_family, (char *) &clientSockAddr.sin6.sin6_addr,
+					       buf, sizeof(buf))) == 1024)
+				strcpy(ipAddress, "Too long");
+		}
+	}
 
-  return ipAddress ;
+	return (ipAddress);
 }
-
 
 
 /*
@@ -107,23 +102,24 @@ char *getClientIP (void)
  *	Print over a network socket
  *********************************************************************************
  */
-
-static int clientPstr (int fd, char *s)
+static int
+clientPstr(int fd, char *s)
 {
-  int len = strlen (s) ;
-  return (write (fd, s, len) == len) ? 0 : -1 ;
+	int len = strlen(s);
+	return (write(fd, s, len) == len) ? 0 : -1;
 }
 
-static int clientPrintf (const int fd, const char *message, ...)
+static int
+clientPrintf(const int fd, const char *message, ...)
 {
-  va_list argp ;
-  char buffer [1024] ;
+	va_list argp;
+	char buffer[1024];
 
-  va_start (argp, message) ;
-    vsnprintf (buffer, 1023, message, argp) ;
-  va_end (argp) ;
+	va_start(argp, message);
+	vsnprintf(buffer, 1023, message, argp);
+	va_end(argp);
 
-  return clientPstr (fd, buffer) ;
+	return (clientPstr(fd, buffer));
 }
 
 
@@ -132,13 +128,13 @@ static int clientPrintf (const int fd, const char *message, ...)
  *	Send some text to the client device
  *********************************************************************************
  */
-
-int sendGreeting (int clientFd)
+int
+sendGreeting(int clientFd)
 {
-  if (clientPrintf (clientFd, "200 Welcome to wiringPiD - https://github.com/WiringPi/WiringPi/\n") < 0)
-    return -1 ;
+	if (clientPrintf(clientFd, "200 Welcome to wiringPiD - https://github.com/WiringPi/WiringPi/\n") < 0)
+		return (-1);
 
-  return clientPrintf (clientFd, "200 Connecting from: %s\n", getClientIP ()) ;
+	return (clientPrintf(clientFd, "200 Connecting from: %s\n", getClientIP()));
 }
 
 
@@ -148,29 +144,30 @@ int sendGreeting (int clientFd)
  *********************************************************************************
  */
 
-static int getSalt (char drySalt [])
+static int
+getSalt(char drySalt[])
 {
-  static const char *seaDog =	"abcdefghijklmnopqrstuvwxyz"
-				"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-				"0123456789/." ;
+	static const char *seaDog = "abcdefghijklmnopqrstuvwxyz"
+				    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+				    "0123456789/.";
 
-  unsigned char wetSalt [SALT_LEN] ;
-  int i, fd ;
+	unsigned char wetSalt[SALT_LEN];
+	int i, fd;
 
-  if ((fd = open ("/dev/urandom", O_RDONLY)) < 0)
-    return fd ;
+	if ((fd = open("/dev/urandom", O_RDONLY)) < 0)
+		return (fd);
 
-  if (read (fd, wetSalt, SALT_LEN) != SALT_LEN)
-    return -1 ;
+	if (read(fd, wetSalt, SALT_LEN) != SALT_LEN)
+		return (-1);
 
-  close (fd) ;
+	close(fd);
 
-  for (i = 0 ; i < SALT_LEN ; ++i)
-    drySalt [i] = seaDog [wetSalt [i] & 63] ;
-    
-  drySalt [SALT_LEN] = 0 ;
+	for (i = 0; i < SALT_LEN; ++i)
+		drySalt[i] = seaDog[wetSalt[i] & 63];
 
-  return 0 ;
+	drySalt[SALT_LEN] = 0;
+
+	return (0);
 }
 
 
@@ -179,13 +176,13 @@ static int getSalt (char drySalt [])
  *	Create and send our salt (aka nonce) to the remote device
  *********************************************************************************
  */
-
-int sendChallenge (int clientFd)
+int
+sendChallenge(int clientFd)
 {
-  if (getSalt (salt) < 0)
-    return -1 ;
+	if (getSalt(salt) < 0)
+		return (-1);
 
-  return clientPrintf (clientFd, "Challenge %s\n", salt) ;
+	return (clientPrintf(clientFd, "Challenge %s\n", salt));
 }
 
 
@@ -194,33 +191,32 @@ int sendChallenge (int clientFd)
  *	Read the encrypted password from the remote device.
  *********************************************************************************
  */
-
-
-int getResponse (int clientFd)
+int
+getResponse(int clientFd)
 {
-  char reply [1024] ;
-  int len ;
+	char reply[1024];
+	int len;
 
-// Being sort of lazy about this. I'm expecting an SHA-512 hash back and these
-//	are exactly 86 characters long, so no reason not to, I guess...
+	// Being sort of lazy about this. I'm expecting an SHA-512 hash back and these
+	//	are exactly 86 characters long, so no reason not to, I guess...
 
-  len = 86 ;
+	len = 86;
 
-  if (setsockopt (clientFd, SOL_SOCKET, SO_RCVLOWAT, (void *)&len, sizeof (len)) < 0)
-    return -1 ;
+	if (setsockopt(clientFd, SOL_SOCKET, SO_RCVLOWAT, (void *) &len, sizeof(len)) < 0)
+		return (-1);
 
-  len = recv (clientFd, reply, 86, 0) ;
-  if (len != 86)
-    return -1 ;
+	len = recv(clientFd, reply, 86, 0);
+	if (len != 86)
+		return (-1);
 
-  reply [len] = 0 ;
+	reply[len] = 0;
 
-  if ((returnedHash = malloc (len + 1)) == NULL)
-    return -1 ;
+	if ((returnedHash = malloc(len + 1)) == NULL)
+		return (-1);
 
-  strcpy (returnedHash, reply) ;
+	strcpy(returnedHash, reply);
 
-  return 0 ;
+	return (0);
 }
 
 
@@ -229,91 +225,88 @@ int getResponse (int clientFd)
  *	See if there's a match. If not, we simply dump them.
  *********************************************************************************
  */
-
-int passwordMatch (const char *password)
+int
+passwordMatch(const char *password)
 {
-  char *encrypted ;
-  char salted [1024] ;
+	char *encrypted;
+	char salted[1024];
 
-  sprintf (salted, "$6$%s$", salt) ;
+	sprintf(salted, "$6$%s$", salt);
 
-  encrypted = crypt (password, salted) ;
+	encrypted = crypt(password, salted);
 
-// 20: $6$ then 16 characters of salt, then $
-// 86 is the length of an SHA-512 hash
+	// 20: $6$ then 16 characters of salt, then $
+	// 86 is the length of an SHA-512 hash
 
-  return strncmp (encrypted + 20, returnedHash, 86) == 0 ;
+	return (strncmp(encrypted + 20, returnedHash, 86) == 0);
 }
 
 
-/* 
+/*
  * setupServer:
  *	Do what's needed to create a local server socket instance that can listen
  *	on both IPv4 and IPv6 interfaces.
  *********************************************************************************
  */
-
-int setupServer (int serverPort)
+int
+setupServer(int serverPort)
 {
-  socklen_t clientSockAddrSize = sizeof (clientSockAddr) ;
+	socklen_t clientSockAddrSize = sizeof(clientSockAddr);
 
-  int on = 1 ;
-  int family ;
-  socklen_t serverSockAddrSize ;
-  int clientFd ;
+	int on = 1;
+	int family;
+	socklen_t serverSockAddrSize;
+	int clientFd;
 
-// Try to create an IPv6 socket
+	// Try to create an IPv6 socket
 
-  serverFd = socket (PF_INET6, SOCK_STREAM, 0) ;
+	serverFd = socket(PF_INET6, SOCK_STREAM, 0);
 
-// If it didn't work, then fall-back to IPv4.
+	// If it didn't work, then fall-back to IPv4.
 
-  if (serverFd < 0)
-  {
-    if ((serverFd = socket (PF_INET, SOCK_STREAM, 0)) < 0)
-      return -1 ;
+	if (serverFd < 0) {
+		if ((serverFd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
+			return (-1);
 
-    family             = AF_INET ;
-    serverSockAddrSize = sizeof (struct sockaddr_in) ;
-  }
-  else		// We got an IPv6 socket
-  {
-    family             = AF_INET6 ;
-    serverSockAddrSize = sizeof (struct sockaddr_in6) ;
-  }
+		family = AF_INET;
+		serverSockAddrSize = sizeof(struct sockaddr_in);
+	} else // We got an IPv6 socket
+	{
+		family = AF_INET6;
+		serverSockAddrSize = sizeof(struct sockaddr_in6);
+	}
 
-  if (setsockopt (serverFd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof (on)) < 0)
-    return -1 ;
+	if (setsockopt(serverFd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
+		return (-1);
 
-// Setup the servers socket address - cope with IPv4 and v6.
+	// Setup the servers socket address - cope with IPv4 and v6.
 
-  memset (&serverSockAddr, 0, sizeof (serverSockAddr)) ;
-  switch (family)
-  {
-    case AF_INET:
-      serverSockAddr.sin.sin_family      = AF_INET ;
-      serverSockAddr.sin.sin_addr.s_addr = htonl (INADDR_ANY) ;
-      serverSockAddr.sin.sin_port        = htons (serverPort) ;
-      break;
+	memset(&serverSockAddr, 0, sizeof(serverSockAddr));
+	switch (family) {
+	case AF_INET:
+		serverSockAddr.sin.sin_family = AF_INET;
+		serverSockAddr.sin.sin_addr.s_addr = htonl(INADDR_ANY);
+		serverSockAddr.sin.sin_port = htons(serverPort);
+		break;
 
-    case AF_INET6:
-      serverSockAddr.sin6.sin6_family = AF_INET6 ;
-      serverSockAddr.sin6.sin6_addr   = in6addr_any ;
-      serverSockAddr.sin6.sin6_port   = htons (serverPort) ;
-  }
+	case AF_INET6:
+		serverSockAddr.sin6.sin6_family = AF_INET6;
+		serverSockAddr.sin6.sin6_addr = in6addr_any;
+		serverSockAddr.sin6.sin6_port = htons(serverPort);
+	}
 
-// Bind, listen and accept
+	// Bind, listen and accept
 
-  if (bind (serverFd, (struct sockaddr *)&serverSockAddr, serverSockAddrSize) < 0)
-    return -1 ;
+	if (bind(serverFd, (struct sockaddr *) &serverSockAddr, serverSockAddrSize) < 0)
+		return (-1);
 
-  if (listen (serverFd, 4) < 0)	// Really only going to talk to one client at a time...
-    return -1 ;
+	if (listen(serverFd, 4) < 0) // Really only going to talk to one client at a time...
+		return (-1);
 
-  if ((clientFd = accept (serverFd, (struct sockaddr *)&clientSockAddr, &clientSockAddrSize)) < 0)
-    return -1 ;
+	if ((clientFd = accept(serverFd, (struct sockaddr *) &clientSockAddr, &clientSockAddrSize)) < 0)
+		return (-1);
 
-  return clientFd ;
+	return (clientFd);
 }
 
 
@@ -321,10 +314,12 @@ int setupServer (int serverPort)
  * closeServer:
  *********************************************************************************
  */
-
-void closeServer (int clientFd)
+void
+closeServer(int clientFd)
 {
-  if (serverFd != -1) close (serverFd) ;
-  if (clientFd != -1) close (clientFd) ;
-  serverFd = clientFd = -1 ;
+	if (serverFd != -1)
+		close(serverFd);
+	if (clientFd != -1)
+		close(clientFd);
+	serverFd = clientFd = -1;
 }

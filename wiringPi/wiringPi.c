@@ -51,6 +51,13 @@
 //		Added in the 2 UART pins
 //		Change maxPins to numPins to more accurately reflect purpose
 
+#include <sys/sysctl.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/utsname.h>
+#include <sys/wait.h>
 
 #include <byteswap.h>
 #include <ctype.h>
@@ -66,12 +73,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/ioctl.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/utsname.h>
-#include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -1013,7 +1014,6 @@ static uint8_t gpioToClkDiv[] = {
  *	Fail. Or not.
  *********************************************************************************
  */
-
 int
 wiringPiFailure(int fatal, const char *message, ...)
 {
@@ -1040,7 +1040,6 @@ wiringPiFailure(int fatal, const char *message, ...)
  *	function. Mosty because they need feeding C drip by drip )-:
  *********************************************************************************
  */
-
 static void
 setupCheck(const char *fName)
 {
@@ -1140,8 +1139,8 @@ const char *revfile = "/proc/device-tree/system/linux,revision"; /* TODO not BSD
 void
 piGpioLayoutOops(const char *why)
 {
-	fprintf(stderr, "Oops: Unable to determine Raspberry Pi board revision from %s and from /proc/cpuinfo\n",
-		revfile);
+	/* TODO with not using revfile, log alternate source */
+	fprintf(stderr, "Oops: Unable to determine Raspberry Pi board revision from X and from /proc/cpuinfo\n");
 	PrintSystemStdErr();
 	fprintf(stderr, " -> %s\n", why);
 	fprintf(stderr, " -> WiringPi is designed for Raspberry Pi and can only be used with a Raspberry Pi.\n\n");
@@ -1153,7 +1152,7 @@ int
 piGpioLayout(void)
 {
 	piBoard();
-	return RaspberryPiLayout;
+	return (RaspberryPiLayout);
 }
 
 /*
@@ -1161,41 +1160,47 @@ piGpioLayout(void)
  *	Deprecated, but does the same as piGpioLayout
  *********************************************************************************
  */
-
 int
 piBoardRev(void)
 {
-	return piGpioLayout();
+	return (piGpioLayout());
 }
 
 const char *
-GetPiRevision(char *line, int linelength, unsigned int *revision)
+get_pi_revision(char *line, int linelength, unsigned int *revision)
 {
-
+	size_t len;
+	uint32_t rev = 0;
+	int res;
 	const char *c = NULL;
-	uint32_t Revision = 0;
-	_Static_assert(sizeof(Revision) == 4, "should be unsigend integer with 4 byte size");
+	char *dtb = NULL
 
-	FILE *fp = fopen(revfile, "rb");
-	if (!fp) {
-		if (wiringPiDebug)
-			perror(revfile);
-		return NULL; // revision file not found or no access
+	_Static_assert(sizeof(rev) == 4, "should be unsigend integer with 4 byte size");
+
+	if (sysctlbyname("machdep.board_revision", &rev, &len, NULL, 0)) {
+		perror("sysctlbyname failed");
 	}
-	int result = fread(&Revision, sizeof(Revision), 1, fp);
-	fclose(fp);
-	if (result < 1) {
-		if (wiringPiDebug)
-			perror(revfile);
-		return NULL; // read error
+
+	if (sysctlnametomib("hw.fdt.dtb", NULL, &len) == -1) {
+		perror("sysctlnametomib");
+		return (1);
 	}
-	Revision = bswap_32(Revision);
-	snprintf(line, linelength, "Revision\t: %04x", Revision);
+	if ((dtb = malloc(len)) == NULL) {
+		return (1)
+	}
+	if (sysctlnametomib("hw.fdt.dtb", dtb, &len) == -1) {
+		perror("sysctlnametomib");
+		return (1);
+	}
+
+	/* TODO read DTB contents and condition this as NetBSD has the above machdep, and FreeBSD has the DTB. */
+
+	revision = bswap_32(rev);
+	snprintf(line, linelength, "Revision\t: %04x", rev);
 	c = &line[11];
-	*revision = Revision;
-	if (wiringPiDebug)
-		printf("GetPiRevision: Revision string: \"%s\" (%s) - 0x%x\n", line, c, *revision);
-	return c;
+	*revision = rev;
+
+	return (c);
 }
 
 /*
@@ -1264,7 +1269,6 @@ GetPiRevision(char *line, int linelength, unsigned int *revision)
  *   REV          00: 0=REV0 1=REV1 2=REV2
  *********************************************************************************
  */
-
 void
 piBoardId(int *model, int *rev, int *mem, int *maker, int *warranty)
 {
@@ -1276,13 +1280,11 @@ piBoardId(int *model, int *rev, int *mem, int *maker, int *warranty)
 
 	// piGpioLayoutOops ("this is only a test case");
 
-	c = GetPiRevision(line, maxlength, &revision); // device tree
-	if (NULL == c) {
-		c = GetPiRevisionLegacy(line, maxlength, &revision); // proc/cpuinfo
-	}
-	if (NULL == c) {
-		piGpioLayoutOops("GetPiRevision failed!");
-	}
+	c = get_pi_revision(line, maxlength, &revision); // device tree
+	if (c == NULL)
+		c = get_pi_revision_legacy(line, maxlength, &revision); // proc/cpuinfo
+	if (c == NULL)
+		piGpioLayoutOops("get_pi_revision failed!");
 
 	if ((revision & (1 << 23)) != 0) // New style, not available for Raspberry Pi 1B/A, CM
 	{
@@ -1515,7 +1517,6 @@ piBoardId(int *model, int *rev, int *mem, int *maker, int *warranty)
  *	Provided for external support.
  *********************************************************************************
  */
-
 int
 wpiPinToGpio(int wpiPin)
 {
@@ -1529,7 +1530,6 @@ wpiPinToGpio(int wpiPin)
  *	Provided for external support.
  *********************************************************************************
  */
-
 int
 physPinToGpio(int physPin)
 {
@@ -1632,7 +1632,6 @@ setPadDrive(int group, int value)
  *	for the gpio readall command (I think)
  *********************************************************************************
  */
-
 int
 getAlt(int pin)
 {
@@ -1709,7 +1708,6 @@ getPinModeAlt(int pin)
  *	Select the native "balanced" mode, or standard mark:space mode
  *********************************************************************************
  */
-
 void
 pwmSetMode(int mode)
 {
@@ -1740,7 +1738,6 @@ pwmSetMode(int mode)
  *	value. If you want different in your own code, then write your own.
  *********************************************************************************
  */
-
 void
 pwmSetRange(unsigned int range)
 {
@@ -1782,7 +1779,6 @@ pwmSetRange(unsigned int range)
  *	after further study of the manual and testing with a 'scope
  *********************************************************************************
  */
-
 void
 pwmSetClock(int divisor)
 {
@@ -1863,7 +1859,6 @@ pwmSetClock(int divisor)
  *	Set the frequency on a GPIO clock pin
  *********************************************************************************
  */
-
 void
 gpioClockSet(int pin, int freq)
 {
@@ -1895,7 +1890,6 @@ gpioClockSet(int pin, int freq)
  *      Locate our device node
  *********************************************************************************
  */
-
 struct wiringPiNodeStruct *
 wiringPiFindNode(int pin)
 {
@@ -1916,7 +1910,6 @@ wiringPiFindNode(int pin)
  *	Create a new GPIO node into the wiringPi handling system
  *********************************************************************************
  */
-
 static void
 pinModeDummy(UNU struct wiringPiNodeStruct *node, UNU int pin, UNU int mode)
 {
@@ -1999,7 +1992,6 @@ wiringPiNewNode(int pinBase, int numPins)
  *	Pin must already be in input mode with appropriate pull up/downs set.
  *********************************************************************************
  */
-
 void
 pinEnableED01Pi(int pin)
 {
@@ -2161,7 +2153,6 @@ requestLineV2(int pin, const unsigned int lineRequestFlags)
  *	This is an un-documented special to let you set any pin to any mode
  *********************************************************************************
  */
-
 void
 pinModeAlt(int pin, int mode)
 {
@@ -2227,7 +2218,6 @@ pinModeAlt(int pin, int mode)
  *	Sets the mode of a pin to be input, output or PWM output
  *********************************************************************************
  */
-
 // Default: rp1_set_pad(pin, 0, 1, 0, 1, 1, 1, 0);
 void
 rp1_set_pad(int pin, int slewfast, int schmitt, int pulldown, int pullup, int drive, int inputenable, int outputdisable)
@@ -2578,7 +2568,6 @@ gpiotools_test_bit(__u64 b, int n)
  *	Read the value of a given Pin, returning HIGH or LOW
  *********************************************************************************
  */
-
 int
 digitalReadDeviceV2(int pin)
 { // INPUT and OUTPUT should work
@@ -2658,7 +2647,6 @@ digitalRead(int pin)
  *	Set an output bit
  *********************************************************************************
  */
-
 void
 digitalWriteDeviceV2(int pin, int value)
 {
@@ -2793,7 +2781,6 @@ pwmWrite(int pin, int value)
  *	so this needs to go to a new node.
  *********************************************************************************
  */
-
 int
 analogRead(int pin)
 {
@@ -2813,7 +2800,6 @@ analogRead(int pin)
  *	so this needs to go to a new node.
  *********************************************************************************
  */
-
 void
 analogWrite(int pin, int value)
 {
@@ -2832,7 +2818,6 @@ analogWrite(int pin, int value)
  *      Output the given frequency on the Pi's PWM pin
  *********************************************************************************
  */
-
 void
 pwmToneWrite(int pin, int freq)
 {
@@ -2863,7 +2848,6 @@ pwmToneWrite(int pin, int freq)
  *	17, 18, 27, 23, 24, 24, 4 on a Pi v1 rev 3 onwards or B+, 2, 3, zero
  *********************************************************************************
  */
-
 void
 digitalWriteByte(const int value)
 {
@@ -2922,7 +2906,6 @@ digitalReadByte(void)
  *	However they overlap with the original read/write bytes.
  *********************************************************************************
  */
-
 void
 digitalWriteByte2(const int value)
 {
@@ -2956,7 +2939,6 @@ digitalReadByte2(void)
  *  Returns struct WPIWfiStatus
  *********************************************************************************
  */
-
 struct WPIWfiStatus
 waitForInterrupt2(int pin, int edgeMode, int ms,
 		  unsigned long debounce_period_us) // ms < 0 wait infinite, = 0 return immediately, > 0 wait timeout
@@ -3135,7 +3117,6 @@ waitForInterrupt(int pin, int ms)
  *
  *********************************************************************************
  */
-
 int
 wiringPiISRStop(int pin)
 {
@@ -3210,7 +3191,6 @@ waitForInterruptClose(int pin)
  *	fires.
  *********************************************************************************
  */
-
 void *
 interruptHandlerV2(void *arg)
 {
@@ -3396,7 +3376,6 @@ interruptHandlerV2(void *arg)
  *  debounce_period_us in microseconds
  *********************************************************************************
  */
-
 int
 wiringPiISRInternal(int pin, int edgeMode, void (*function)(struct WPIWfiStatus wfiStatus, void *userdata),
 		    void (*functionClassic)(void), unsigned long debounce_period_us, void *userdata)
@@ -3477,7 +3456,6 @@ wiringPiISR2(int pin, int edgeMode, void (*function)(struct WPIWfiStatus wfiStat
  *	time in milliseconds and microseconds.
  *********************************************************************************
  */
-
 static void
 initialiseEpoch(void)
 {
@@ -3502,7 +3480,6 @@ initialiseEpoch(void)
  *	Wait for some number of milliseconds
  *********************************************************************************
  */
-
 void
 delay(unsigned int ms)
 {
@@ -3532,7 +3509,6 @@ delay(unsigned int ms)
  *      to use gettimeofday () and poll on that instead...
  *********************************************************************************
  */
-
 void
 delayMicrosecondsHard(unsigned int us)
 {
@@ -3572,7 +3548,6 @@ delayMicroseconds(unsigned int us)
  *	Wraps at 49 days.
  *********************************************************************************
  */
-
 unsigned int
 millis(void)
 {
@@ -3591,7 +3566,7 @@ millis(void)
 	now = (uint64_t) ts.tv_sec * (uint64_t) 1000 + (uint64_t) (ts.tv_nsec / 1000000L);
 #endif
 
-	return (uint32_t) (now - epochMilli);
+	return ((uint32_t)(now - epochMilli));
 }
 
 
@@ -3601,7 +3576,6 @@ millis(void)
  *	Wraps after 71 minutes.
  *********************************************************************************
  */
-
 unsigned int
 micros(void)
 {
@@ -3619,7 +3593,7 @@ micros(void)
 #endif
 
 
-	return (uint32_t) (now - epochMicro);
+	return ((uint32_t)(now - epochMicro));
 }
 
 
@@ -3638,7 +3612,6 @@ piMicros64(void)
  *	Return our current version number
  *********************************************************************************
  */
-
 void
 wiringPiVersion(int *major, int *minor)
 {
@@ -3658,7 +3631,7 @@ wiringPiUserLevelAccess(void)
 		gpiomemModule = gpiomem_RP1;
 	}
 
-	return stat(gpiomemModule, &statBuf) == 0 ? 1 : 0;
+	return (stat(gpiomemModule, &statBuf) == 0 ? 1 : 0);
 }
 
 
@@ -3696,7 +3669,7 @@ CheckPCIeFileContent(const char *pcieaddress, const char *filename, const char *
 			perror("fopen");
 		};
 	}
-	return Found;
+	return (Found);
 }
 
 
@@ -3784,9 +3757,9 @@ wiringPiGlobalMemoryAccess(void)
 		}
 
 		close(fd);
-		return returnvalue;
+		return (returnvalue);
 	}
-	return 0; // Failed!
+	return (0); // Failed!
 }
 
 /*
@@ -3799,7 +3772,6 @@ wiringPiGlobalMemoryAccess(void)
  * Changed now to revert to "gpio" mode if we're running on a Compute Module.
  *********************************************************************************
  */
-
 int
 wiringPiSetup(void)
 {
@@ -3807,7 +3779,7 @@ wiringPiSetup(void)
 	int model, rev, mem, maker, overVolted;
 
 	if (wiringPiSetuped)
-		return 0;
+		return (0);
 
 	wiringPiSetuped = TRUE;
 
@@ -3906,31 +3878,31 @@ wiringPiSetup(void)
 		base = NULL;
 		gpio = (uint32_t *) mmap(0, BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, GPIO_BASE);
 		if (gpio == MAP_FAILED)
-			return wiringPiFailure(WPI_ALMOST, "wiringPiSetup: mmap (GPIO) failed: %s\n", strerror(errno));
+			return (wiringPiFailure(WPI_ALMOST, "wiringPiSetup: mmap (GPIO) failed: %s\n", strerror(errno)));
 
 		//	PWM
 
 		pwm = (uint32_t *) mmap(0, BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, GPIO_PWM);
 		if (pwm == MAP_FAILED)
-			return wiringPiFailure(WPI_ALMOST, "wiringPiSetup: mmap (PWM) failed: %s\n", strerror(errno));
+			return (wiringPiFailure(WPI_ALMOST, "wiringPiSetup: mmap (PWM) failed: %s\n", strerror(errno)));
 
 		//	Clock control (needed for PWM)
 
 		clk = (uint32_t *) mmap(0, BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, GPIO_CLOCK_ADR);
 		if (clk == MAP_FAILED)
-			return wiringPiFailure(WPI_ALMOST, "wiringPiSetup: mmap (CLOCK) failed: %s\n", strerror(errno));
+			return (wiringPiFailure(WPI_ALMOST, "wiringPiSetup: mmap (CLOCK) failed: %s\n", strerror(errno)));
 
 		//	The drive pads
 
 		pads = (uint32_t *) mmap(0, BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, GPIO_PADS);
 		if (pads == MAP_FAILED)
-			return wiringPiFailure(WPI_ALMOST, "wiringPiSetup: mmap (PADS) failed: %s\n", strerror(errno));
+			return (wiringPiFailure(WPI_ALMOST, "wiringPiSetup: mmap (PADS) failed: %s\n", strerror(errno)));
 
 		//	The system timer
 
 		timer = (uint32_t *) mmap(0, BLOCK_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, GPIO_TIMER);
 		if (timer == MAP_FAILED)
-			return wiringPiFailure(WPI_ALMOST, "wiringPiSetup: mmap (TIMER) failed: %s\n", strerror(errno));
+			return (wiringPiFailure(WPI_ALMOST, "wiringPiSetup: mmap (TIMER) failed: %s\n", strerror(errno)));
 
 		// Set the timer to free-running, 1MHz.
 		//	0xF9 is 249, the timer divide is base clock / (divide+1)
@@ -3996,7 +3968,7 @@ wiringPiSetup(void)
 
 	initialiseEpoch();
 
-	return 0;
+	return (0);
 }
 
 
@@ -4008,7 +3980,6 @@ wiringPiSetup(void)
  *	memory mapped hardware directly.
  *********************************************************************************
  */
-
 int
 wiringPiSetupGpio(void)
 {
@@ -4019,7 +3990,7 @@ wiringPiSetupGpio(void)
 
 	wiringPiMode = WPI_MODE_GPIO;
 
-	return 0;
+	return (0);
 }
 
 
@@ -4031,7 +4002,6 @@ wiringPiSetupGpio(void)
  *	memory mapped hardware directly.
  *********************************************************************************
  */
-
 int
 wiringPiSetupPhys(void)
 {
@@ -4042,7 +4012,7 @@ wiringPiSetupPhys(void)
 
 	wiringPiMode = WPI_MODE_PHYS;
 
-	return 0;
+	return (0);
 }
 
 int
@@ -4052,13 +4022,13 @@ wiringPiSetupPinType(enum WPIPinType pinType)
 		printf("wiringPi: wiringPiSetupPinType(%d) called\n", (int) pinType);
 	switch (pinType) {
 	case WPI_PIN_BCM:
-		return wiringPiSetupGpio();
+		return (wiringPiSetupGpio());
 	case WPI_PIN_WPI:
-		return wiringPiSetup();
+		return (wiringPiSetup());
 	case WPI_PIN_PHYS:
-		return wiringPiSetupPhys();
+		return (wiringPiSetupPhys());
 	default:
-		return -1;
+		return (-1);
 	}
 }
 
@@ -4067,7 +4037,7 @@ int
 wiringPiSetupGpioDevice(enum WPIPinType pinType)
 {
 	if (wiringPiSetuped)
-		return 0;
+		return (0);
 	if (wiringPiDebug) {
 		printf("wiringPi: wiringPiSetupGpioDevice(%d) called\n", (int) pinType);
 	}
@@ -4078,7 +4048,7 @@ wiringPiSetupGpioDevice(enum WPIPinType pinType)
 		wiringPiReturnCodes = TRUE;
 
 	if (wiringPiGpioDeviceGetFd() < 0) {
-		return -1;
+		return (-1);
 	}
 	wiringPiSetuped = TRUE;
 
@@ -4104,10 +4074,10 @@ wiringPiSetupGpioDevice(enum WPIPinType pinType)
 		break;
 	default:
 		wiringPiSetuped = FALSE;
-		return -1;
+		return (-1);
 	}
 
-	return 0;
+	return (0);
 }
 
 /*
@@ -4117,13 +4087,12 @@ wiringPiSetupGpioDevice(enum WPIPinType pinType)
  *
  * Switched to new GPIO driver Interface in version 3.3
  */
-
 int
 wiringPiSetupSys(void)
 {
 	if (wiringPiSetuped)
-		return 0;
+		return (0);
 	if (wiringPiDebug)
 		printf("wiringPi: wiringPiSetupSys called\n");
-	return wiringPiSetupGpioDevice(WPI_PIN_BCM);
+	return (wiringPiSetupGpioDevice(WPI_PIN_BCM));
 }

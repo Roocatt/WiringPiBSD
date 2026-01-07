@@ -1,6 +1,6 @@
 /*
  * wiringShift.h:
- *	Emulate some of the Arduino wiring functionality. 
+ *	Emulate some of the Arduino wiring functionality.
  *
  * Copyright (c) 2009-2012 Gordon Henderson.
  ***********************************************************************
@@ -22,20 +22,23 @@
  ***********************************************************************
  */
 
-#define	LSBFIRST	0
-#define	MSBFIRST	1
+#ifndef __WIRINGSHIFT_H__
+#define __WIRINGSHIFT_H__
 
-#ifndef	_STDINT_H
-#  include <stdint.h>
-#endif
+#define LSBFIRST 0
+#define MSBFIRST 1
+
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern uint8_t shiftIn      (uint8_t dPin, uint8_t cPin, uint8_t order) ;
-extern void    shiftOut     (uint8_t dPin, uint8_t cPin, uint8_t order, uint8_t val) ;
+extern uint8_t shiftIn(uint8_t, uint8_t, uint8_t);
+extern void shiftOut(uint8_t, uint8_t, uint8_t, uint8_t);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __WIRINGSHIFT_H__ */

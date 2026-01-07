@@ -22,12 +22,17 @@
  ***********************************************************************
  */
 
+#ifndef __MCP23S17_H__
+#define __MCP23S17_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int mcp23s17Setup (int pinBase, int spiPort, int devId) ;
+extern int	mcp23s17Setup(int, int, int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __MCP23S17_H__ */

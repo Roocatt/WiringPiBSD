@@ -20,24 +20,28 @@
  ***********************************************************************
  */
 
-#define	DEFAULT_SERVER_PORT	6124
+#ifndef __DRC_NET_CMD_H__
+#define __DRC_NET_CMD_H__
 
-#define	DRCN_PIN_MODE		1
-#define	DRCN_PULL_UP_DN		2
+#define DEFAULT_SERVER_PORT 6124
 
-#define	DRCN_DIGITAL_WRITE	3
-#define	DRCN_DIGITAL_WRITE8	4
-#define	DRCN_ANALOG_WRITE	5
-#define	DRCN_PWM_WRITE		6
+#define DRCN_PIN_MODE 1
+#define DRCN_PULL_UP_DN 2
 
-#define	DRCN_DIGITAL_READ	7
-#define	DRCN_DIGITAL_READ8	8
-#define	DRCN_ANALOG_READ	9
+#define DRCN_DIGITAL_WRITE 3
+#define DRCN_DIGITAL_WRITE8 4
+#define DRCN_ANALOG_WRITE 5
+#define DRCN_PWM_WRITE 6
+
+#define DRCN_DIGITAL_READ 7
+#define DRCN_DIGITAL_READ8 8
+#define DRCN_ANALOG_READ 9
 
 
-struct drcNetComStruct
-{
-  uint32_t pin ;
-  uint32_t cmd ;
-  uint32_t data ;
+struct drcNetComStruct {
+	uint32_t pin;
+	uint32_t cmd;
+	uint32_t data;
 };
+
+#endif /* __DRC_NET_CMD_H__ */

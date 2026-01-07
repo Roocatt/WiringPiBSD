@@ -22,12 +22,17 @@
  ***********************************************************************
  */
 
+#ifndef __MAX5322_H__
+#define __MAX5322_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int max5322Setup (int pinBase, int spiChannel) ;
+extern int	max5322Setup(int, int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __MAX5322_H__ */

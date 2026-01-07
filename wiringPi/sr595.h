@@ -22,13 +22,17 @@
  ***********************************************************************
  */
 
+#ifndef __SR595_H__
+#define __SR595_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int sr595Setup (const int pinBase, const int numPins,
-	const int dataPin, const int clockPin, const int latchPin) ;
+extern int	sr595Setup(const int, const int, const int, const int, const int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __SR595_H__ */

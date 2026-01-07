@@ -21,11 +21,16 @@
  ***********************************************************************
  */
 
-extern char *getClientIP   (void) ;
-extern int   getResponce   (int clientFd) ;
-extern int   setupServer   (int serverPort) ;
-extern int   sendGreeting  (int clientFd) ;
-extern int   sendChallenge (int clientFd) ;
-extern int   getResponse   (int clientFd) ;
-extern int   passwordMatch (const char *password) ;
-extern void  closeServer   (int clientFd) ;
+#ifndef __NETWORK_H__
+#define __NETWORK_H__
+
+extern char	*getClientIP(void);
+extern int	getResponce(int);
+extern int	setupServer(int);
+extern int	sendGreeting(int);
+extern int	sendChallenge(int);
+extern int	getResponse(int);
+extern int	passwordMatch(const char *);
+extern void	closeServer(int);
+
+#endif /* __NETWORK_H__ */

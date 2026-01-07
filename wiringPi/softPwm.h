@@ -22,14 +22,19 @@
  ***********************************************************************
  */
 
+#ifndef __SOFT_PWM_H__
+#define __SOFT_PWM_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int  softPwmCreate (int pin, int value, int range) ;
-extern void softPwmWrite  (int pin, int value) ;
-extern void softPwmStop   (int pin) ;
+extern int softPwmCreate(int, int, int);
+extern void softPwmWrite(int, int);
+extern void softPwmStop(int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __SOFT_PWM_H__ */

@@ -23,12 +23,17 @@
  ***********************************************************************
  */
 
+#ifndef __HTU21D_H__
+#define __HTU21D_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int htu21dSetup (const int pinBase) ;
+extern int	htu21dSetup(const int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __HTU21D_H__ */

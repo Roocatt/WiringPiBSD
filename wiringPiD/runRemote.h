@@ -24,6 +24,11 @@
 
 // Globals
 
-extern int noLocalPins ;
+#ifndef __RUNREMOTE_H__
+#define __RUNREMOTE_H__
 
-extern void runRemoteCommands (int fd) ;
+extern int noLocalPins;
+
+extern void	runRemoteCommands(int);
+
+#endif /* __RUNREMOTE_H__ */

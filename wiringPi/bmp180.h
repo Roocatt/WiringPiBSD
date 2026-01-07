@@ -23,12 +23,17 @@
  ***********************************************************************
  */
 
+#ifndef __BMP180_H__
+#define __BMP180_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int bmp180Setup (const int pinBase) ;
+extern int	bmp180Setup(const int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __BMP180_H__ */

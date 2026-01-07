@@ -22,12 +22,17 @@
  ***********************************************************************
  */
 
+#ifndef __MCP3004_H__
+#define __MCP3004_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int mcp3004Setup (int pinBase, int spiChannel) ;
+extern int	mcp3004Setup(int, int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __MCP3004_H__ */

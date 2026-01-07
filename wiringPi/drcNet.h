@@ -31,12 +31,17 @@ struct drcNetStruct
 } ;
 **************/
 
+#ifndef __DRC_NET_H__
+#define __DRC_NET_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int drcSetupNet (const int pinBase, const int numPins, const char *ipAddress, const char *port, const char *password) ;
+extern int	drcSetupNet(const int, const int, const char *, const char *, const char *);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __DRC_NET_H__ */

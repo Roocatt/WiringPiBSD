@@ -22,5 +22,9 @@
  ***********************************************************************
  */
 
+#ifndef __WPIEXTENSIONS_H__
+#define __WPIEXTENSIONS_H__
 
-extern int loadWPiExtension (char *progName, char *extensionData, int verbose) ;
+extern int loadWPiExtension(char *, char *, int);
+
+#endif /* __WPIEXTENSIONS_H__ */

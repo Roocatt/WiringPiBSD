@@ -23,12 +23,17 @@
  ***********************************************************************
  */
 
+#ifndef __DS18B20_H__
+#define __DS18B20_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int ds18b20Setup (const int pinBase, const char *serialNum) ;
+extern int	ds18b20Setup(const int, const char *);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __DS18B20_H__ */

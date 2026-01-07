@@ -22,12 +22,17 @@
  ***********************************************************************
  */
 
+#ifndef __MCP23S08_H__
+#define __MCP23S08_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int mcp23s08Setup (const int pinBase, const int spiPort, const int devId) ;
+extern int	mcp23s08Setup(const int, const int, const int);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* __MCP23S08_H__ */
