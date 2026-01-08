@@ -1178,22 +1178,25 @@ get_pi_revision(char *line, int linelength, unsigned int *revision)
 	_Static_assert(sizeof(rev) == 4, "should be unsigend integer with 4 byte size");
 
 	if (sysctlbyname("machdep.board_revision", &rev, &len, NULL, 0)) {
-		perror("sysctlbyname failed");
+		if (wiringPiDebug)
+			perror("sysctlbyname failed");
+
+		if (sysctlnametomib("hw.fdt.dtb", NULL, &len)) {
+			perror("sysctlnametomib");
+			return (1);
+		}
+		if ((dtb = malloc(len)) == NULL) {
+			return (1)
+		}
+		if (sysctlnametomib("hw.fdt.dtb", dtb, &len)) {
+			perror("sysctlnametomib");
+			free(dtb);
+			return (1);
+		}
+		/* TODO read DTB contents and condition this as NetBSD has the above machdep, and FreeBSD has the DTB. */
 	}
 
-	if (sysctlnametomib("hw.fdt.dtb", NULL, &len) == -1) {
-		perror("sysctlnametomib");
-		return (1);
-	}
-	if ((dtb = malloc(len)) == NULL) {
-		return (1)
-	}
-	if (sysctlnametomib("hw.fdt.dtb", dtb, &len) == -1) {
-		perror("sysctlnametomib");
-		return (1);
-	}
 
-	/* TODO read DTB contents and condition this as NetBSD has the above machdep, and FreeBSD has the DTB. */
 
 	revision = bswap_32(rev);
 	snprintf(line, linelength, "Revision\t: %04x", rev);

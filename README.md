@@ -113,7 +113,13 @@ pi@wiringdemo:~ $ gpio readall
 [German](./documentation/deutsch/functions.md)  
 [English](./documentation/english/functions.md)
 
-## Porting Information
+## Debug
+
+WIRINGPI_DEBUG=1 ./my_wiringpi_program
+
+WIRINGPI_DEBUG=1 gpio readall
+
+## BSD Porting Information
 
 ### Backporting Future Changes from WiringPi
 As the GC2 maintained WiringPi is still under development, as is the RaspberryPi
@@ -135,7 +141,10 @@ exception to this and these features should be used where possible.
 ### Code Style
 The new code style is BSD KNF as defined in OpenBSD's style(9). Any file that has not
 been touched yet as part of the porting process can be left in the original code style
-for the time being.
+for the time being. There is a `.clang-format` which incorporates a lot of the
+style(9) format rules, though not all of them, and it could use more tuning. The
+`.clang-format` should not be treated as the reference for style, that should be
+the OpenBSD style(9).
 
 ### Headers
 The original pre-port WiringPi almost never uses header guards. While the code was
@@ -143,15 +152,6 @@ architected in such a way that this didn't cause issues, the new approach is suc
 that *ALL* headers should use header guards regardless of necessity. This also means
 that there is no longer any requirement for code to be structured such that header
 guards aren't required for any new code or refactoring.
-
-## Support
-
-Please do not contact any of the original WiringPi developers (Gordon, or GC2).
-This fork/BSD port building on the work of the WiringPi developers is entirely
-the work of [Roos](https://github.com/Roocatt) and any concerns or issues
-should be directed to her. The best way to bring issues with this WiringPi
-port to Roos's attention is to open an
-[issue on the Github repo](https://github.com/Roocatt/WiringPi/issues/new)
 
 ## History
 
@@ -167,8 +167,19 @@ which has been [deprecated](https://web.archive.org/web/20220405225008/http://wi
 Since 2024, [GC2](https://github.com/GrazerComputerClub) has taken over
 maintenance of the WiringPi project from which this was forked.
 
-## Debug
+## Support
 
-WIRINGPI_DEBUG=1 ./my_wiringpi_program
+Please do not contact any of the original WiringPi developers (Gordon, or GC2).
+This fork/BSD port building on the work of the WiringPi developers is entirely
+the work of [Roos](https://github.com/Roocatt) and any concerns or issues
+should be directed to her. The best way to bring issues with this WiringPi
+port to Roos's attention is to open an
+[issue on the Github repo](https://github.com/Roocatt/WiringPi/issues/new)
 
-WIRINGPI_DEBUG=1 gpio readall
+## License
+
+The original work from Gordon, GC2, and contributors is under the LGPL-3.0
+license. New non-derivative code added as part of the BSD port is
+available under the ISC license. These ISC licensed source files will begin
+with a comment indicate the difference in licence. Any derivative work as
+part of the BSD port is under the LGPL-3.0 license.
