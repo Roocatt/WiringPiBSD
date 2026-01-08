@@ -30,84 +30,41 @@
 static const uint8_t dtb_magic_number[] = { 0xd0, 0x0d, 0xfe, 0xed };
 
 
-static inline int	dtb_magic_number_present(uint8_t *);
-static inline int
-dtb_magic_number_present(uint8_t *data)
-{
-	uint32_t data_num;
-
-	data_num = be32toh((uint32_t)*data);
-
-	return (!strncmp((char *)&data_num, dtb_magic_number, sizeof(dtb_magic_number)));
-}
-
-int
-dtb_extract(uint8_t *dtb_data, size_t data_len)
+/* TODO incomplete */
+uint8_t *
+dtb_prop_find(uint8_t *dtb_data, char *find_name, uint32_t *find_name_len)
 {
 	dtb_header_t *header;
 	dtb_prop_t *prop_cursor;
-	int val;
-	uint32_t struct_len, string_len, cur_token;
-	uint8_t *struct_pos, *string_pos, *cursor, token_following;
+	uint32_t struct_len, string_len, prop_val_len, val;
+	uint8_t *struct_pos, *string_pos, *cursor, *name, *ret;
 
-	if (dtb_magic_number_present(dtb_data)) {
-		return (1);
-	}
+	val = be32toh((uint32_t)*data);
+
+	if (!strncmp((char *)&val, dtb_magic_number, sizeof(dtb_magic_number))))
+		return (NULL);
 
 	header = (dtb_header_t *)dtb_data;
-
-	if (be32toh(header->total_len) > data_len || be32toh(header->dt_struct_offset) > data_len
-		    || be32toh(header->dt_strings_offset) > data_len) {
-		return (2);
-	}
-
 	struct_pos = dtb_data + be32toh(header->dt_struct_offset);
 	struct_len = be32toh(header->dt_struct_len);
 	string_pos = dtb_data + be32toh(header->dt_strings_offset);
-	string_len = be32toh(header->dt_strings_len);
 
-	if (be32toh(header->dt_struct_offset) + struct_len > data_len
-		    || be32toh(header->dt_strings_offset) + string_len > data_len)
-		return (2);
-
-	cur_token = 0;
-	token_following = 0;
-
-	for (int i = 0; i < struct_len / sizeof(uint32_t); i += sizeof(uint32_t)) {
+	for (int i = 0; i < struct_len; i += sizeof(uint32_t)) {
 		cursor = struct_pos + i;
 		val = be32toh(*((uint32_t *)cursor));
 
-		if (cur_token == FDT_BEGIN_NODE && !token_following) { /* TODO fix this*/
-			token_following = 1;
-			continue;
-		}
-
-		switch (val) {
-		case FDT_BEGIN_NODE:
-			cur_token = FDT_BEGIN_NODE;
-			break;
-		case FDT_END_NODE:
-			cur_token = FDT_END_NODE;
-			break;
-		case FDT_PROP:
-			if (cur_token == FDT_END) {
-				return (3);
-			}
-			cur_token = FDT_PROP;
-
+		if (val == FDT_PROP) {
 			prop_cursor = (dtb_prop_t *)(cursor + sizeof(uint32_t));
+			prop_val_len = be32toh(prop_cursor->len);
+			name = (char *)dtb_data + be32toh(header->dt_strings_offset) + be32toh(prop_cursor->name_offset);
+			if (strcmp(name, find_name)) {
+				*find_name_len = be32toh(prop_cursor->len);
+				return ((uint8_t *)(prop_cursor + sizeof(dtb_prop_t)));
+			}
 
-			i += sizeof(dtb_prop_t);
+			i += sizeof(dtb_prop_t) + (sizeof(uint32_t) - (prop_val_len % sizeof(uint32_t))) + prop_val_len;
 			cursor = struct_pos + i;
-			break;
-		case FDT_NOP:
-			cur_token = FDT_NOP;
-			break;
-		case FDT_END:
-			cur_token = FDT_END;
-			break;
 		}
 	}
-
-	return (0);
+	return (NULL);
 }

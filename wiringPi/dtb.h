@@ -23,9 +23,7 @@
 #define FDT_NOP 0x00000004
 #define FDT_END 0x00000009
 
-#define DTB_MAGIC_NUMBER 0xd00dfeed
-
-typedef __attribute__((__packed__)) struct {
+typedef struct {
 	uint32_t magic_number;
 	uint32_t total_len;
 	uint32_t dt_struct_offset;
@@ -38,11 +36,11 @@ typedef __attribute__((__packed__)) struct {
 	uint32_t dt_struct_len;
 } dtb_header_t;
 
-typedef __attribute__((__packed__)) struct {
+typedef struct {
 	uint32_t len;
 	uint32_t name_offset;
 } dtb_prop_t;
 
-int	dtb_extract(uint8_t *, size_t);
+uint8_t	*dtb_prop_find(uint8_t *, char *, uint32_t *)
 
 #endif /* WIRINGPI_DTB_H */
