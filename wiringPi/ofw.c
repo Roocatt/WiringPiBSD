@@ -27,10 +27,11 @@
 #include "ofw.h"
 
 int
-ofw_fetch(uint32_t node, char *name, uint32_t *val)
+ofw_fetch(char *node, char *name, uint32_t *val)
 {
 	struct iocdesc desc;
 	int fd;
+	phandle_t node_id;
 	uint32_t rval;
 	char buf[4];
 
@@ -38,11 +39,22 @@ ofw_fetch(uint32_t node, char *name, uint32_t *val)
 	if (fd < 0)
 		return (1);
 
+	desc.of_nodeid = 0;
+	desc.of_name = node;
+	desc.of_namelen = strlen(node);
+	desc.of_buf = buf;
+	desc.of_buflen = 4;
+
+	if (ioctl(fd, OFIOCFINDDEVICE, &desc) < 0) {
+		close(fd);
+		return (2);
+	}
+
+	node_id = desc.of_nodeid;
+
 	desc.of_nodeid = node;
 	desc.of_name = name;
 	desc.of_namelen = strlen(name);
-	desc.of_buf = buf;
-	desc.of_buflen = 4;
 
 	if (ioctl(fd, OFIOCGET, &desc) < 0) {
 		close(fd);
