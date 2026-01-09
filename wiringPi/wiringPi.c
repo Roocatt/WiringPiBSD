@@ -76,6 +76,9 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "ofw.h"
+#include "dtb.h"
+
 #include "softPwm.h"
 #include "softTone.h"
 
@@ -1159,7 +1162,7 @@ get_pi_revision(char *line, int linelength, unsigned int *revision)
 	uint32_t rev = 0;
 	int res;
 	const char *c = NULL;
-	char *dtb = NULL
+	char *dtb = NULL;
 	uint8_t *rev_prop = NULL;
 
 	_Static_assert(sizeof(rev) == 4, "should be unsigend integer with 4 byte size");
@@ -1167,28 +1170,37 @@ get_pi_revision(char *line, int linelength, unsigned int *revision)
 	if (sysctlbyname("machdep.board_revision", &rev, &len, NULL, 0)) {
 		if (wiringPiDebug)
 			perror("sysctlbyname failed");
+	} else
+		goto end;
 
-		if (sysctlnametomib("hw.fdt.dtb", NULL, &len)) {
+	if (ofw_fetch(0x0118, "linux,revision", &rev)) {
+		if (wiringPiDebug)
+			perror("ofw fetch failed");
+	} else
+		goto end;
+
+
+	if (sysctlnametomib("hw.fdt.dtb", NULL, &len)) {
+		if (wiringPiDebug)
 			perror("sysctlnametomib");
-			return (1);
-		}
-		if ((dtb = malloc(len)) == NULL) {
-			return (1)
-		}
-		if (sysctlnametomib("hw.fdt.dtb", dtb, &len)) {
-			perror("sysctlnametomib");
-			free(dtb);
-			return (1);
-		}
-		rev_prop = dtb_prop_find(dtb, "linux,revision", &len);
-		if (rev_prop == NULL || len != sizeof(rev)) {
-			free(dtb);
-			return (1);
-		}
-		rev = *((uint32_t *)rev_prop);
-		/* TODO read DTB contents and condition this as NetBSD has the above machdep, and FreeBSD has the DTB. */
+		return (NULL);
 	}
+	if ((dtb = malloc(len)) == NULL)
+		return (NULL);
+	if (sysctlnametomib("hw.fdt.dtb", dtb, &len)) {
+		if (wiringPiDebug)
+			perror("sysctlnametomib");
+		free(dtb);
+		return (NULL);
+	}
+	rev_prop = dtb_prop_find(dtb, "linux,revision", &len);
+	if (rev_prop == NULL || len != sizeof(rev)) {
+		free(dtb);
+		return (NULL);
+	}
+	rev = *((uint32_t *)rev_prop);
 
+end:
 	rev = bswap_32(rev);
 	snprintf(line, linelength, "Revision\t: %04x", rev);
 	c = &line[11];
