@@ -209,7 +209,7 @@ extern "C" {
 // Data
 
 // Internal
-extern void piGpioLayoutOops(const char *);
+extern void pi_gpio_layout_oops(const char *);
 extern int wiringPiFailure(int, const char *, ...);
 
 // Core wiringPi functions
@@ -271,8 +271,7 @@ extern int	wiringPiSetupPiFaceForGpioProg(void); // Don't use this - for gpio pr
 
 // On-Board Raspberry Pi hardware specific stuff
 
-extern int		piGpioLayout(void);
-extern int		piBoardRev(void); // Deprecated, but does the same as piGpioLayout
+extern int		pi_gpio_layout(void);
 extern void		piBoardId(int *, int *, int *, int *, int *);
 extern int		piBoard40Pin(void); // Interface V3.7
 extern int		piRP1Model(void); // Interface V3.14

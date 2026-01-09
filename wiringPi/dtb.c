@@ -32,7 +32,7 @@ static const uint8_t dtb_magic_number[] = { 0xd0, 0x0d, 0xfe, 0xed };
 
 /* TODO incomplete */
 uint8_t *
-dtb_prop_find(uint8_t *dtb_data, char *find_name, uint32_t *find_name_len)
+dtb_prop_find(uint8_t *dtb_data, char *find_name, size_t *find_name_len)
 {
 	dtb_header_t *header;
 	dtb_prop_t *prop_cursor;
