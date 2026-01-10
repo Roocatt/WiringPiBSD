@@ -17,7 +17,6 @@
 /* Skip this for OpenBSD */
 #ifndef __OpenBSD__
 
-#include <sys/endian.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
 

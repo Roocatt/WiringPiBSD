@@ -11,6 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run build
-        run: |
-          ./build
+      - name: Test
+        id: test
+        uses: vmactions/freebsd-vm@v1
+        with:
+          release: "15.0"
+          arch: aarch64
+          run:
+            ./build
