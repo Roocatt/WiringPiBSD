@@ -1174,12 +1174,14 @@ get_pi_revision(char *line, int linelength, unsigned int *revision)
 	} else
 		goto end;
 
+#ifndef __OpenBSD__
 	/* Use /dev/openfirm - Method tested on FreeBSD and NetBSD */
 	if (ofw_fetch("/system", "linux,revision", &rev)) {
 		if (wiringPiDebug)
 			perror("ofw fetch failed");
 	} else
 		goto end;
+#endif /* __OpenBSD__ */
 
 	/* Use sysctl hw.fdt.dtb + FDT/DTB parsing  - Method tested on FreeBSD */
 	if (sysctlnametomib("hw.fdt.dtb", NULL, &len)) {

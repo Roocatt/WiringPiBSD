@@ -17,8 +17,12 @@
 #ifndef WIRINGPI_OFW_H
 #define WIRINGPI_OFW_H
 
+#ifndef __OpenBSD__
+
 #OFW_DEV_PATH "/dev/openfirm"
 
 int	ofw_fetch(uint32_t, char *, uint32_t *);
+
+#endif /* __OpenBSD__ */
 
 #endif /* WIRINGPI_OFW_H */

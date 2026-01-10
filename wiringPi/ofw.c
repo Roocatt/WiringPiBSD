@@ -14,6 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+/* Skip this for OpenBSD */
+#ifndef __OpenBSD__
+
 #include <sys/endian.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
@@ -29,7 +32,12 @@
 int
 ofw_fetch(char *node, char *name, uint32_t *val)
 {
+	/* The structure name is different, but the structure is the same. */
+#ifdef __FreeBSD__
+	struct ofiocdesc desc;
+#else
 	struct iocdesc desc;
+#endif
 	int fd;
 	phandle_t node_id;
 	uint32_t rval;
@@ -67,3 +75,5 @@ ofw_fetch(char *node, char *name, uint32_t *val)
 
 	return (0);
 }
+
+#endif /* __OpenBSD__ */
