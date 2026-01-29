@@ -6,3 +6,7 @@ debian-template/wiringPi
 debian-template/wiringpi-*.deb
 gpio/gpio
 .idea/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake

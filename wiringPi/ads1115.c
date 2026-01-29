@@ -32,12 +32,12 @@
  *********************************************************************************
  */
 
-#include <byteswap.h>
+#include <sys/endian.h>
 #include <stdio.h>
 #include <stdint.h>
 
-#include <wiringPi.h>
-#include <wiringPiI2C.h>
+#include "wiringPi.h"
+#include "wiringPiI2C.h"
 
 #include "ads1115.h"
 
@@ -176,7 +176,7 @@ static int myAnalogRead (struct wiringPiNodeStruct *node, int pin)
 //	Start a single conversion
 
   config |= CONFIG_OS_SINGLE ;
-  config = __bswap_16 (config) ;
+  config = bswap16 (config) ;
   wiringPiI2CWriteReg16 (node->fd, 1, config) ;
 
 // Wait for the conversion to complete
@@ -184,14 +184,14 @@ static int myAnalogRead (struct wiringPiNodeStruct *node, int pin)
   for (;;)
   {
     result =  wiringPiI2CReadReg16 (node->fd, 1) ;
-    result = __bswap_16 (result) ;
+    result = bswap16 (result) ;
     if ((result & CONFIG_OS_MASK) != 0)
       break ;
     delayMicroseconds (100) ;
   }
 
   result =  wiringPiI2CReadReg16 (node->fd, 0) ;
-  result = __bswap_16 (result) ;
+  result = bswap16 (result) ;
 
 // Sometimes with a 0v input on a single-ended channel the internal 0v reference
 //	can be higher than the input, so you get a negative result...
@@ -259,7 +259,7 @@ static void myAnalogWrite (struct wiringPiNodeStruct *node, int pin, int data)
   else
     ndata = (int16_t)data ;
 
-  ndata = __bswap_16 (ndata) ;
+  ndata = bswap16 (ndata) ;
   wiringPiI2CWriteReg16 (node->fd, reg, data) ;
 }
 
