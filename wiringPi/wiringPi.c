@@ -58,8 +58,8 @@
 #include <sys/time.h>
 #include <sys/utsname.h>
 #include <sys/wait.h>
+#include <sys/endian.h>
 
-#include <byteswap.h>
 #include <ctype.h>
 #include <dirent.h>
 #include <errno.h>

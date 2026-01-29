@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <wiringPi.h>
+#include "wiringPi.h"
 
 #include "wiringPiLegacy.h"
 

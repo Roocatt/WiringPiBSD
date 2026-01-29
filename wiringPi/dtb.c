@@ -39,9 +39,9 @@ dtb_prop_find(uint8_t *dtb_data, char *find_name, size_t *find_name_len)
 	uint32_t struct_len, string_len, prop_val_len, val;
 	uint8_t *struct_pos, *string_pos, *cursor, *name, *ret;
 
-	val = be32toh((uint32_t)*data);
+	val = be32toh((uint32_t)*dtb_data);
 
-	if (!strncmp((char *)&val, dtb_magic_number, sizeof(dtb_magic_number))))
+	if (!strncmp((char *)&val, dtb_magic_number, sizeof(dtb_magic_number)))
 		return (NULL);
 
 	header = (dtb_header_t *)dtb_data;

@@ -31,7 +31,7 @@
 #include <syslog.h>
 #include <unistd.h>
 
-#include <wiringPi.h>
+#include "wiringPi.h"
 #include <wpiExtensions.h>
 
 #include "daemonise.h"

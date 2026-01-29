@@ -23,7 +23,7 @@ To compile programs with wiringPi Library, you need to include `wiringPi.h`
 as well as link against `wiringPi`:
 
 ```c
-#include <wiringPi.h> // Include WiringPi library!
+#include "wiringPi.h" // Include WiringPi library!
 
 int main(void)
 {

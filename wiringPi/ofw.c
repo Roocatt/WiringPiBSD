@@ -20,11 +20,17 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <dev/ofw/openfirmio.h>
+
+#ifdef __NetBSD__
+typedef int32_t phandle_t;
+#endif
+
 
 #include "ofw.h"
 
@@ -32,7 +38,7 @@ int
 ofw_fetch(char *node, char *name, uint32_t *val)
 {
 	/* The structure name is different, but the structure is the same. */
-#ifdef __FreeBSD__
+#ifndef __FreeBSD__
 	struct ofiocdesc desc;
 #else
 	struct iocdesc desc;
@@ -59,7 +65,7 @@ ofw_fetch(char *node, char *name, uint32_t *val)
 
 	node_id = desc.of_nodeid;
 
-	desc.of_nodeid = node;
+	desc.of_nodeid = node_id;
 	desc.of_name = name;
 	desc.of_namelen = strlen(name);
 

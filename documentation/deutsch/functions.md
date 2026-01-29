@@ -438,7 +438,7 @@ struct WPIWfiStatus {
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <wiringPi.h>
+#include "wiringPi.h"
 #include <time.h>
 
 #define BOUNCETIME 3000 // microseconds

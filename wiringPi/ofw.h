@@ -19,9 +19,11 @@
 
 #ifndef __OpenBSD__
 
-#OFW_DEV_PATH "/dev/openfirm"
+#include <stdint.h>
 
-int	ofw_fetch(uint32_t, char *, uint32_t *);
+#define OFW_DEV_PATH "/dev/openfirm"
+
+int	ofw_fetch(char *, char *, uint32_t *);
 
 #endif /* __OpenBSD__ */
 

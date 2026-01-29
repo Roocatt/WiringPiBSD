@@ -22,11 +22,11 @@
  ***********************************************************************
  */
 
-#include <byteswap.h>
+#include <sys/endian.h>
 #include <stdint.h>
 
-#include <wiringPi.h>
-#include <wiringPiSPI.h>
+#include "wiringPi.h"
+#include "wiringPiSPI.h"
 
 #include "max31855.h"
 
@@ -38,7 +38,7 @@ static int myAnalogRead (struct wiringPiNodeStruct *node, int pin)
 
   wiringPiSPIDataRW (node->fd, (unsigned char *)&spiData, 4) ;
 
-  spiData = __bswap_32(spiData) ;
+  spiData = bswap32(spiData) ;
 
   switch (chan)
   {

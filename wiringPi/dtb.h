@@ -41,6 +41,6 @@ typedef struct {
 	uint32_t name_offset;
 } dtb_prop_t;
 
-uint8_t	*dtb_prop_find(uint8_t *, char *, uint32_t *)
+uint8_t	*dtb_prop_find(uint8_t *, char *, size_t *);
 
 #endif /* WIRINGPI_DTB_H */
