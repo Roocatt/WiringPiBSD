@@ -59,6 +59,7 @@
 #include <sys/utsname.h>
 #include <sys/wait.h>
 #include <sys/endian.h>
+#include <sys/gpio.h>
 
 #include <ctype.h>
 #include <dirent.h>
@@ -85,6 +86,18 @@
 #include "../version.h"
 #include "wiringPi.h"
 #include "wiringPiLegacy.h"
+
+
+/* Specific BSD version definitions */
+#ifdef __FreeBSD__
+#define GPIOWRITE GPIOSET
+typedef struct gpio_pin gpio_set_t;
+#else
+typedef struct gpio_set gpio_set_t;
+#endif
+
+
+#define BITULL(x) (1ULL << x)
 
 // Environment Variables
 
@@ -444,7 +457,7 @@ enum WPIFlag {
 };
 
 
-static unsigned int lineFlags[64] = {
+static unsigned int line_flags[64] = {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
@@ -1160,7 +1173,6 @@ get_pi_revision(char *line, int linelength, unsigned int *revision)
 {
 	size_t len;
 	uint32_t rev = 0;
-	int res;
 	const char *c = NULL;
 	char *dtb = NULL;
 	uint8_t *rev_prop = NULL;
@@ -1187,29 +1199,29 @@ get_pi_revision(char *line, int linelength, unsigned int *revision)
 	if (sysctlnametomib("hw.fdt.dtb", NULL, &len)) {
 		if (wiringPiDebug)
 			perror("sysctlnametomib");
-		return (NULL);
+		goto end;
 	}
 	if ((dtb = malloc(len)) == NULL)
-		return (NULL);
-	if (sysctlnametomib("hw.fdt.dtb", dtb, &len)) {
+		goto err;
+	if (sysctlnametomib("hw.fdt.dtb", (int *)dtb, &len)) {
 		if (wiringPiDebug)
 			perror("sysctlnametomib");
 		free(dtb);
-		return (NULL);
+		goto err;
 	}
-	rev_prop = dtb_prop_find(dtb, "linux,revision", &len);
+	rev_prop = dtb_prop_find((uint8_t *)dtb, "linux,revision", &len);
 	if (rev_prop == NULL || len != sizeof(rev)) {
 		free(dtb);
-		return (NULL);
+		goto err;
 	}
 	rev = *((uint32_t *)rev_prop);
 
 end:
-	rev = bswap_32(rev);
+	rev = bswap32(rev);
 	snprintf(line, linelength, "Revision\t: %04x", rev);
 	c = &line[11];
 	*revision = rev;
-
+err:
 	return (c);
 }
 
@@ -2005,24 +2017,32 @@ pinEnableED01Pi(int pin)
 #define ZeroMemory(Destination, Length) memset((Destination), 0, (Length))
 
 
+/* TODO BSDs make less chip info available via ioctl.
+ * This needs to use alternate sources if possible, and/or callers need to be refactored.
+ */
 int
 OpenAndCheckGpioChip(int GPIONo, const char *label, const unsigned int lines)
 {
+	struct gpio_info chipinfo = {0};
 	char szGPIOChip[30];
+	int fd, res;
 
 	sprintf(szGPIOChip, "/dev/gpiochip%d", GPIONo);
-	int Fd = open(szGPIOChip, O_RDWR);
-	if (Fd < 0) {
-		fprintf(stderr, "wiringPi: ERROR: %s open ret=%d\n", szGPIOChip, Fd);
-		return (Fd);
+	fd = open(szGPIOChip, O_RDWR);
+	if (fd < 0) {
+		fprintf(stderr, "wiringPi: ERROR: %s open ret=%d\n", szGPIOChip, fd);
+		return (fd);
 	} else {
 		if (wiringPiDebug) {
-			printf("wiringPi: Open chip %s succeded, fd=%d\n", szGPIOChip, Fd);
+			printf("wiringPi: Open chip %s succeded, fd=%d\n", szGPIOChip, fd);
 		}
-		struct gpiochip_info chipinfo;
-		ZeroMemory(&chipinfo, sizeof(chipinfo));
-		int ret = ioctl(Fd, GPIO_GET_CHIPINFO_IOCTL, &chipinfo);
-		if (0 == ret) {
+
+		res = ioctl(fd, GPIOINFO, &chipinfo);
+		if (res == 0) {
+			if (wiringPiDebug)
+				printf("gpiochipinfo: num_pins: %d\n", chipinfo.gpio_npins);
+
+			/*
 			if (wiringPiDebug) {
 				printf("%s: name=%s, label=%s, lines=%u\n", szGPIOChip, chipinfo.name, chipinfo.label,
 				       chipinfo.lines);
@@ -2036,19 +2056,20 @@ OpenAndCheckGpioChip(int GPIONo, const char *label, const unsigned int lines)
 			}
 			if (chipOK) {
 				if (wiringPiDebug) {
-					printf("%s: valid, fd=%d\n", szGPIOChip, Fd);
+					printf("%s: valid, fd=%d\n", szGPIOChip, fd);
 				}
 			} else {
 				if (wiringPiDebug) {
 					printf("%s: invalid, search for '%s' with %u lines!\n", szGPIOChip, label,
 					       lines);
 				}
-				close(Fd);
+				close(fd);
 				return (-1); // invalid chip
 			}
+			*/
 		}
 	}
-	return (Fd);
+	return (fd);
 }
 
 int
@@ -2077,7 +2098,7 @@ releaseLine(int pin)
 
 	if (wiringPiDebug)
 		printf("releaseLine: pin:%d\n", pin);
-	lineFlags[pin] = 0;
+	line_flags[pin] = 0;
 	close(lineFds[pin]);
 	lineFds[pin] = -1;
 	isrDebouncePeriodUs[pin] = 0;
@@ -2085,64 +2106,39 @@ releaseLine(int pin)
 
 
 int
-requestLineV2(int pin, const unsigned int lineRequestFlags)
+requestLineV2(int pin, const unsigned int line_request_flags)
 {
-	struct gpio_v2_line_request req;
-	struct gpio_v2_line_config config;
-	int ret;
+	gpio_set_t pin_config = { 0 };
+	int res = -1;
 
-	if (lineFds[pin] >= 0) {
-		if (lineRequestFlags == lineFlags[pin]) {
-			// already requested
-			return lineFds[pin];
-		} else {
-			// different request -> rerequest
-			releaseLine(pin);
-		}
-	}
-
-	/* requested line */
 	if (wiringPiGpioDeviceGetFd() < 0)
-		return (-1);
+		goto err;
 
-	memset(&req, 0, sizeof(req));
-	memset(&config, 0, sizeof(config));
-	if (lineRequestFlags & WPI_FLAG_INPUT) {
-		config.flags |= GPIO_V2_LINE_FLAG_INPUT;
+	if (line_request_flags & WPI_FLAG_INPUT && line_request_flags & WPI_FLAG_OUTPUT)
+		pin_config.gp_flags |= GPIO_PIN_INOUT;
+	else {
+		if (line_request_flags & WPI_FLAG_INPUT)
+			pin_config.gp_flags |= GPIO_PIN_INPUT;
+		if (line_request_flags & WPI_FLAG_OUTPUT)
+			pin_config.gp_flags |= GPIO_PIN_OUTPUT;
 	}
-	if (lineRequestFlags & WPI_FLAG_OUTPUT) {
-		config.flags |= GPIO_V2_LINE_FLAG_OUTPUT;
-	}
-	if (lineRequestFlags & WPI_FLAG_BIAS_OFF) {
-		config.flags |= GPIO_V2_LINE_FLAG_BIAS_DISABLED;
-	}
-	if (lineRequestFlags & WPI_FLAG_BIAS_UP) {
-		config.flags |= GPIO_V2_LINE_FLAG_BIAS_PULL_UP;
-	}
-	if (lineRequestFlags & WPI_FLAG_BIAS_DOWN) {
-		config.flags |= GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN;
-	}
-	if (wiringPiDebug) {
-		printf("requestLine flags v2: %llu\n", config.flags);
-	}
-	strcpy(req.consumer, "wiringpi_gpio_req");
+	if (line_request_flags & WPI_FLAG_BIAS_OFF)
+		pin_config.gp_flags |= GPIO_PIN_TRISTATE;
+	if (line_request_flags & WPI_FLAG_BIAS_UP)
+		pin_config.gp_flags |= GPIO_PIN_PULLUP;
+	if (line_request_flags & WPI_FLAG_BIAS_DOWN)
+		pin_config.gp_flags |= GPIO_PIN_PULLDOWN;
 
-	req.offsets[0] = pin;
-	req.num_lines = 1;
-	req.config = config;
+	res = ioctl(chipFd, GPIOSET, &pin_config);
+	if (res)
+		goto err;
+	line_flags[pin] = line_request_flags;
 
-	ret = ioctl(chipFd, GPIO_V2_GET_LINE_IOCTL, &req);
-
-	if (ret || req.fd < 0) {
-		ReportDeviceError("get line handle v2", pin, "RequestLine", ret);
-		return (-1);
-	}
-
-	lineFlags[pin] = lineRequestFlags;
-	lineFds[pin] = req.fd;
 	if (wiringPiDebug)
-		printf("requestLine succeeded: pin:%d, flags: 0x%u, fd :%d\n", pin, lineRequestFlags, lineFds[pin]);
-	return lineFds[pin];
+		printf("requestLine flags v2: %d\n", pin_config.gp_flags);
+
+err:
+	return (res); /* TODO  this used to return an fd, but BSD GPIO doesn't do lines the same way. Check callers. */
 }
 
 /*
@@ -2260,7 +2256,7 @@ pinModeFlagsDevice(int pin, int mode, const unsigned int flags)
 void
 pinModeDevice(int pin, int mode)
 {
-	pinModeFlagsDevice(pin, mode, lineFlags[pin]);
+	pinModeFlagsDevice(pin, mode, line_flags[pin]);
 }
 
 void
@@ -2415,7 +2411,7 @@ pinMode(int pin, int mode)
 void
 pullUpDnControlDevice(int pin, int pud)
 {
-	unsigned int flag = lineFlags[pin];
+	unsigned int flag = line_flags[pin];
 	unsigned int biasflags = WPI_FLAG_BIAS_OFF | WPI_FLAG_BIAS_UP | WPI_FLAG_BIAS_DOWN;
 
 	flag &= ~biasflags;
@@ -2434,12 +2430,12 @@ pullUpDnControlDevice(int pin, int pud)
 	}
 
 	/* reset input/output */
-	if (lineFlags[pin] & WPI_FLAG_OUTPUT) {
+	if (line_flags[pin] & WPI_FLAG_OUTPUT) {
 		pinModeFlagsDevice(pin, OUTPUT, flag);
-	} else if (lineFlags[pin] & WPI_FLAG_INPUT) {
+	} else if (line_flags[pin] & WPI_FLAG_INPUT) {
 		pinModeFlagsDevice(pin, INPUT, flag);
 	} else {
-		lineFlags[pin] = flag; /* only store for later */
+		line_flags[pin] = flag; /* only store for later */
 	}
 }
 
@@ -2539,19 +2535,19 @@ pullUpDnControl(int pin, int pud)
  helper functions for gpio_v2_line_values bits
 */
 static inline void
-gpiotools_set_bit(__u64 *b, int n)
+gpiotools_set_bit(uint64_t *b, int n)
 {
-	*b |= _BITULL(n);
+	*b |= BITULL(n);
 }
 
 static inline void
-gpiotools_clear_bit(__u64 *b, int n)
+gpiotools_clear_bit(uint64_t *b, int n)
 {
-	*b &= ~_BITULL(n);
+	*b &= ~BITULL(n);
 }
 
 static inline void
-gpiotools_assign_bit(__u64 *b, int n, bool value)
+gpiotools_assign_bit(uint64_t *b, int n, bool value)
 {
 	if (value)
 		gpiotools_set_bit(b, n);
@@ -2560,9 +2556,9 @@ gpiotools_assign_bit(__u64 *b, int n, bool value)
 }
 
 static inline int
-gpiotools_test_bit(__u64 b, int n)
+gpiotools_test_bit(uint64_t b, int n)
 {
-	return !!(b & _BITULL(n));
+	return !!(b & BITULL(n));
 }
 
 //*********************************************
@@ -2576,25 +2572,22 @@ gpiotools_test_bit(__u64 b, int n)
 int
 digitalReadDeviceV2(int pin)
 { // INPUT and OUTPUT should work
-	struct gpio_v2_line_values lv;
-	int ret;
+	struct gpio_req req = {0};
+	int res = LOW, ioctl_res, fd;
 
-	if (lineFds[pin] < 0) {
-		// line not requested - auto request on first read as input
-		pinModeDevice(pin, INPUT);
+	if ((fd = wiringPiGpioDeviceGetFd()) < 0) {
+		if (wiringPiDebug)
+			printf("digitalWriteDeviceV2: wiringPiGpioDeviceGetFd() failed\n");
+		goto err;
 	}
-	lv.mask = 0;
-	lv.bits = 0;
-	if (lineFds[pin] >= 0) {
-		gpiotools_set_bit(&lv.mask, 0);
-		ret = ioctl(lineFds[pin], GPIO_V2_LINE_GET_VALUES_IOCTL, &lv);
-		if (ret) {
-			ReportDeviceError("get line values", pin, "digitalRead", ret);
-			return LOW; // error
-		}
-		return gpiotools_test_bit(lv.bits, 0);
+	if ((ioctl_res = ioctl(fd, GPIOREAD, &req))) {
+		ReportDeviceError("get line values", pin, "digitalRead", ioctl_res);
+		goto err;
 	}
-	return LOW; // error , need to request line before
+	res = req.gp_value ? HIGH : LOW;
+
+err:
+	return (res);
 }
 
 
@@ -2608,7 +2601,7 @@ digitalRead(int pin)
 		switch (wiringPiMode) {
 		default: // WPI_MODE_GPIO_SYS
 			fprintf(stderr, "digitalRead: invalid mode\n");
-			return LOW;
+			return (LOW);
 		case WPI_MODE_PINS:
 			pin = pinToGpio[pin];
 			break;
@@ -2629,19 +2622,19 @@ digitalRead(int pin)
 			switch (gpio[2 * pin] & RP1_STATUS_LEVEL_MASK) {
 			default: // 11 or 00 not allowed, give LOW!
 			case RP1_STATUS_LEVEL_LOW:
-				return LOW;
+				return (LOW);
 			case RP1_STATUS_LEVEL_HIGH:
-				return HIGH;
+				return (HIGH);
 			}
 		} else {
 			if ((*(gpio + gpioToGPLEV[pin]) & (1 << (pin & 31))) != 0)
-				return HIGH;
+				return (HIGH);
 			else
-				return LOW;
+				return (LOW);
 		}
 	} else {
 		if ((node = wiringPiFindNode(pin)) == NULL)
-			return LOW;
+			return (LOW);
 		return node->digitalRead(node, pin);
 	}
 }
@@ -2655,32 +2648,27 @@ digitalRead(int pin)
 void
 digitalWriteDeviceV2(int pin, int value)
 {
-	int ret;
-	struct gpio_v2_line_values values;
+	struct gpio_req req = {0};
+	int res, fd;
 
 	if (wiringPiDebug)
 		printf("digitalWriteDeviceV2: ioctl pin:%d value: %d\n", pin, value);
 
-	if (lineFds[pin] < 0) {
-		// line not requested - auto request on first write as output
-		pinModeDevice(pin, OUTPUT);
+	if ((fd = wiringPiGpioDeviceGetFd()) < 0) {
+		if (wiringPiDebug)
+			printf("digitalWriteDeviceV2: wiringPiGpioDeviceGetFd() failed\n");
+		return;
 	}
 
-	if (lineFds[pin] >= 0 && (lineFlags[pin] & GPIO_V2_LINE_FLAG_OUTPUT) > 0) {
-		values.mask = 0;
-		values.bits = 0;
-		gpiotools_set_bit(&values.mask, 0);
-		gpiotools_assign_bit(&values.bits, 0, !!value);
+	/* TODO original code only had output. Bidirectional should work too, but verify in testing. */
+	if (line_flags[pin] & (GPIO_PIN_OUTPUT | GPIO_PIN_INOUT)) {
+		res = ioctl(fd, GPIOWRITE, &req);
 
-		ret = ioctl(lineFds[pin], GPIO_V2_LINE_SET_VALUES_IOCTL, &values);
-		if (ret == -1) {
-			ReportDeviceError("digitalWriteDeviceV2", pin, "GPIO_V2_LINE_SET_VALUES_IOCTL", ret);
-			return; // error
+		if (res == -1) {
+			ReportDeviceError("digitalWriteDeviceV2", pin, "GPIOWRITE", res);
 		}
-	} else {
-		fprintf(stderr, "digitalWriteDeviceV2: no output (%d)\n", lineFlags[pin]);
-	}
-	return; // error
+	} else
+		fprintf(stderr, "digitalWriteDeviceV2: no output (%d)\n", line_flags[pin]);
 }
 
 
@@ -3473,7 +3461,7 @@ initialiseEpoch(void)
 #else
 	struct timespec ts;
 
-	clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+	clock_gettime(CLOCK_MONOTONIC, &ts);
 	epochMilli = (uint64_t) ts.tv_sec * (uint64_t) 1000 + (uint64_t) (ts.tv_nsec / 1000000L);
 	epochMicro = (uint64_t) ts.tv_sec * (uint64_t) 1000000 + (uint64_t) (ts.tv_nsec / 1000L);
 #endif
@@ -3566,7 +3554,7 @@ millis(void)
 #else
 	struct timespec ts;
 
-	clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+	clock_gettime(CLOCK_MONOTONIC, &ts);
 	now = (uint64_t) ts.tv_sec * (uint64_t) 1000 + (uint64_t) (ts.tv_nsec / 1000000L);
 #endif
 
@@ -3591,7 +3579,7 @@ micros(void)
 #else
 	struct timespec ts;
 
-	clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+	clock_gettime(CLOCK_MONOTONIC, &ts);
 	now = (uint64_t) ts.tv_sec * (uint64_t) 1000000 + (uint64_t) (ts.tv_nsec / 1000);
 #endif
 
@@ -3605,7 +3593,7 @@ piMicros64(void)
 {
 	struct timespec ts;
 
-	clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+	clock_gettime(CLOCK_MONOTONIC, &ts);
 	uint64_t now = (uint64_t) ts.tv_sec * (uint64_t) 1000000 + (uint64_t) (ts.tv_nsec / 1000);
 	return (now - epochMicro);
 }

@@ -1,5 +1,8 @@
 # January 20, 2026 - Roos Catling-Tate
 
+# TODO makefiles are renamed to old.make wherever present to serve as reference for now.
+# Delete these after fully moving to CMake.
+
 cmake_minimum_required(VERSION 3.24)
 
 # TODO Copy-pasted cross compile cmake stuff. Do this right.
@@ -23,3 +26,21 @@ add_library(wiringPi SHARED wiringPi/ads1115.c wiringPi/ads1115.h wiringPi/bmp18
 	wiringPi/wiringPiLegacy.h wiringPi/wiringPiSPI.c wiringPi/wiringPiSPI.h wiringPi/WiringpiV1.c
 	wiringPi/wiringSerial.c wiringPi/wiringSerial.h wiringPi/wiringShift.c wiringPi/wiringShift.h
 	wiringPi/wpiExtensions.c wiringPi/wpiExtensions.h)
+
+add_library(devLib SHARED devLib/ds1302.c devLib/ds1302.h devLib/font.h devLib/gertboard.c devLib/gertboard.h
+	devLib/lcd.c devLib/lcd.h devLib/lcd128x64.c devLib/lcd128x64.h devLib/maxdetect.c devLib/maxdetect.h
+	devLib/piFace.c devLib/piFace.h devLib/piFaceOld.c devLib/piGlow.c devLib/piGlow.h devLib/piNes.c
+	devLib/piNes.h devLib/scrollPhat.c devLib/scrollPhat.h devLib/scrollPhatFont.h)
+
+target_include_directories(devLib PRIVATE wiringPi)
+
+add_executable(gpio gpio/gpio.c)
+target_include_directories(gpio PRIVATE wiringPi)
+
+add_executable(wiringPiD wiringPiD/daemonise.c wiringPiD/daemonise.h wiringPiD/drcNetCmd.h wiringPiD/network.c
+	wiringPiD/network.h wiringPiD/runRemote.c wiringPiD/runRemote.h wiringPiD/wiringpid.c)
+
+target_include_directories(wiringPiD PRIVATE wiringPi)
+
+# TODO add target for pins
+# TODO add target for examples
