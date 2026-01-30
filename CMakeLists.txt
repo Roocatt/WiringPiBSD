@@ -25,7 +25,9 @@ add_library(wiringPi SHARED wiringPi/ads1115.c wiringPi/ads1115.h wiringPi/bmp18
 	wiringPi/wiringPi.h wiringPi/wiringPiI2C.c wiringPi/wiringPiI2C.h wiringPi/wiringPiLegacy.c
 	wiringPi/wiringPiLegacy.h wiringPi/wiringPiSPI.c wiringPi/wiringPiSPI.h wiringPi/WiringpiV1.c
 	wiringPi/wiringSerial.c wiringPi/wiringSerial.h wiringPi/wiringShift.c wiringPi/wiringShift.h
-	wiringPi/wpiExtensions.c wiringPi/wpiExtensions.h)
+	wiringPi/wpiExtensions.c wiringPi/wpiExtensions.h
+	wiringPi/gpioirq.c
+	wiringPi/gpioirq.h)
 
 add_library(devLib SHARED devLib/ds1302.c devLib/ds1302.h devLib/font.h devLib/gertboard.c devLib/gertboard.h
 	devLib/lcd.c devLib/lcd.h devLib/lcd128x64.c devLib/lcd128x64.h devLib/maxdetect.c devLib/maxdetect.h

@@ -57,7 +57,6 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/utsname.h>
-#include <sys/wait.h>
 #include <sys/endian.h>
 #include <sys/gpio.h>
 
@@ -69,7 +68,6 @@
 #include <poll.h>
 #include <pthread.h>
 #include <stdarg.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,6 +83,8 @@
 
 #include "../version.h"
 #include "wiringPi.h"
+
+#include "gpioirq.h"
 #include "wiringPiLegacy.h"
 
 
@@ -2540,27 +2540,6 @@ gpiotools_set_bit(uint64_t *b, int n)
 	*b |= BITULL(n);
 }
 
-static inline void
-gpiotools_clear_bit(uint64_t *b, int n)
-{
-	*b &= ~BITULL(n);
-}
-
-static inline void
-gpiotools_assign_bit(uint64_t *b, int n, bool value)
-{
-	if (value)
-		gpiotools_set_bit(b, n);
-	else
-		gpiotools_clear_bit(b, n);
-}
-
-static inline int
-gpiotools_test_bit(uint64_t b, int n)
-{
-	return !!(b & BITULL(n));
-}
-
 //*********************************************
 
 
@@ -2929,161 +2908,73 @@ digitalReadByte2(void)
 /*
  * waitForInterrupt2:
  *	Wait for Interrupt on a GPIO pin and use v2 of the character device API, need Kernel 5.1
+ *
+ *	ms < 0 wait infinite, = 0 return immediately, > 0 wait timeout
  *  Returns struct WPIWfiStatus
  *********************************************************************************
  */
 struct WPIWfiStatus
-waitForInterrupt2(int pin, int edgeMode, int ms,
-		  unsigned long debounce_period_us) // ms < 0 wait infinite, = 0 return immediately, > 0 wait timeout
+waitForInterrupt2(int pin, int edge_mode, int ms, unsigned long debounce_period_us)
 {
-	int ret;
-	int fd, attr, status, readret;
-	struct pollfd polls;
-	struct gpio_v2_line_event evdata;
-	struct gpio_v2_line_config config;
-	struct gpio_v2_line_request req;
+	struct WPIWfiStatus wfi_status = {0};
+	uint64_t poll_ts;
+	uint32_t flags = 0;
+	int res, fd;
 	const char *strmode = "";
-	struct WPIWfiStatus wfiStatus;
 
-	memset(&wfiStatus, 0, sizeof(wfiStatus));
-	/* open gpio */
-	if (wiringPiGpioDeviceGetFd() < 0 || !ToBCMPin(&pin)) {
-		wfiStatus.statusOK = -1;
-		return wfiStatus;
+	if ((fd = wiringPiGpioDeviceGetFd()) < 0 || !ToBCMPin(&pin)) {
+		if (wiringPiDebug)
+			printf("waitForInterrupt2: wiringPiGpioDeviceGetFd() failed\n");
+		wfi_status.statusOK = -1;
+		return wfi_status;
 	}
 
-	memset(&req, 0, sizeof(req));
-	memset(&config, 0, sizeof(config));
-
-	/* setup config */
-	config.flags = GPIO_V2_LINE_FLAG_INPUT;
-
-	switch (edgeMode) {
+	switch (edge_mode) {
 	default:
 	case INT_EDGE_SETUP:
-		if (wiringPiDebug) {
+		if (wiringPiDebug)
 			printf("waitForInterrupt2: edgeMode INT_EDGE_SETUP - exiting\n");
-		}
-		wfiStatus.statusOK = -1;
-		return wfiStatus;
+		wfi_status.statusOK = -1;
+		return wfi_status;
 	case INT_EDGE_FALLING:
-		config.flags |= GPIO_V2_LINE_FLAG_EDGE_FALLING;
+		flags |= GPIO_INTR_NEG_EDGE;
 		strmode = "falling";
 		break;
 	case INT_EDGE_RISING:
-		config.flags |= GPIO_V2_LINE_FLAG_EDGE_RISING;
+		flags |= GPIO_INTR_POS_EDGE;
 		strmode = "rising";
 		break;
 	case INT_EDGE_BOTH:
-		config.flags |= (GPIO_V2_LINE_FLAG_EDGE_FALLING | GPIO_V2_LINE_FLAG_EDGE_RISING);
+		flags |= GPIO_INTR_DOUBLE_EDGE;
 		strmode = "both";
 		break;
 	}
-	strcpy(req.consumer, "wiringpi_gpio_irq");
-
 	if (debounce_period_us) {
-		attr = config.num_attrs;
-		config.num_attrs++;
-		gpiotools_set_bit(&config.attrs[attr].mask, 0);
-		config.attrs[attr].attr.id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
-		config.attrs[attr].attr.debounce_period_us = debounce_period_us;
+	/* TODO BSD gpio doesn't do the same debounce functionality. */
 	}
 
-	req.num_lines = 1;
-	req.offsets[0] = pin;
-	req.event_buffer_size = 32;
-	req.config = config;
-
-	status = ioctl(chipFd, GPIO_V2_GET_LINE_IOCTL, &req);
-	if (status == -1) {
-		ReportDeviceError("GPIO_V2_GET_LINE_IOCTL", pin, strmode, status);
-		wfiStatus.statusOK = -1;
-		return wfiStatus;
-	}
-
-	if (wiringPiDebug) {
-		printf("waitForInterrupt2: GPIO get line %d , mode %s succeded, fd=%d\n", pin, strmode, req.fd);
-	}
-
-	fd = req.fd;
-	isrFds[pin] = fd;
-	isrDebouncePeriodUs[pin] = debounce_period_us;
-
-	/* set event fd nonbloack read */
-	/*
-	int flags = fcntl(fd, F_GETFL);
-	flags |= O_NONBLOCK;
-	status = fcntl(fd, F_SETFL, flags);
-	if (status) {
-	  fprintf(stderr, "wiringPi: ERROR: fcntl set nonblock return=%d\n", status);
-	  return -1;
-	}
-      */
-
-	// Setup poll structure
-	polls.fd = fd;
-	polls.events = POLLIN | POLLPRI;
-	polls.revents = 0;
-
-	ret = poll(&polls, 1, ms);
-	if (ret < 0) {
-		if (wiringPiDebug) {
-			fprintf(stderr, "waitForInterrupt2: ERROR: poll returned=%d\n", ret);
-		}
-		wfiStatus.statusOK = -1;
-	} else if (ret == 0) {
-		if (wiringPiDebug) {
+	gpioirq_attach(fd, pin, 0, flags);
+	res = gpioirq_poll_pin(pin, ms, &poll_ts);
+	if (res < 0) {
+		if (wiringPiDebug)
+			fprintf(stderr, "waitForInterrupt2: ERROR: poll returned=%d\n", res);
+		wfi_status.statusOK = -1;
+	} else if (res == 0) { /* timeout */
+		if (wiringPiDebug)
 			fprintf(stderr, "waitForInterrupt2: timeout: poll returned zero\n");
-		}
-		wfiStatus.statusOK = 0; // timeout
+		wfi_status.statusOK = 0;
 	} else {
-		if (wiringPiDebug) {
-			printf("waitForInterrupt2: IRQ line %d received %d, fd=%d\n", pin, ret, isrFds[pin]);
-		}
-		if (polls.revents & POLLIN) {
-			/* read event data */
-			readret = read(isrFds[pin], &evdata, sizeof(evdata));
-			if (readret == sizeof(evdata)) {
-				if (wiringPiDebug) {
-					printf("waitForInterrupt2: IRQ at PIN: %d, timestamp: %lld\n", evdata.offset,
-					       evdata.timestamp_ns);
-				}
-				switch (evdata.id) {
-				case GPIO_V2_LINE_EVENT_RISING_EDGE:
-					wfiStatus.edge = INT_EDGE_RISING;
-					if (wiringPiDebug)
-						printf("waitForInterrupV2: rising edge\n");
-					break;
-				case GPIO_V2_LINE_EVENT_FALLING_EDGE:
-					wfiStatus.edge = INT_EDGE_FALLING;
-					if (wiringPiDebug)
-						printf("waitForInterrupt2: falling edge\n");
-					break;
-				default:
-					wfiStatus.edge = INT_EDGE_SETUP; // edge = 0
-					if (wiringPiDebug)
-						printf("waitForInterrupt2: unknown event\n");
-					break;
-				}
-				wfiStatus.timeStamp_us =
-						evdata.timestamp_ns / 1000LL; // nanoseconds u64 to microseconds
-				wfiStatus.pinBCM = evdata.offset;
-				wfiStatus.statusOK = 1;
-			} else {
-				wfiStatus.statusOK = -1;
-			}
-		} else {
-			wfiStatus.statusOK = -1;
-		}
+		if (wiringPiDebug)
+			printf("waitForInterrupt2: IRQ at PIN: %d, timestamp: %lu\n", pin, poll_ts);
+		wfi_status.edge = edge_mode; /* we assume it is the same as requested */
+		wfi_status.timeStamp_us = poll_ts;
+		wfi_status.statusOK = 1;
+
+		if (wiringPiDebug)
+			printf("waitForInterrupt2: GPIO get line %d , mode %s succeded, fd=%d\n", pin, strmode, fd);
 	}
 
-	if (isrFds[pin] > 0) {
-		close(isrFds[pin]); // release line
-		isrFds[pin] = -1;
-		isrDebouncePeriodUs[pin] = 0;
-	}
-
-	return wfiStatus;
+	return (wfi_status);
 }
 
 int
@@ -3665,7 +3556,7 @@ CheckPCIeFileContent(const char *pcieaddress, const char *filename, const char *
 
 
 void
-GetRP1Memory(void)
+get_RP1_memory(void)
 {
 	pciemem_RP1[0] = '\0';
 	DIR *dir = opendir(pcie_path);
@@ -3705,7 +3596,7 @@ wiringPiGlobalMemoryAccess(void)
 
 	piBoard();
 	if (piRP1Model()) {
-		GetRP1Memory(pciemem_RP1, sizeof(pciemem_RP1));
+		get_RP1_memory(); /* Originally called with pciemem_RP1, sizeof(pciemem_RP1), but not used??? */
 		gpiomemGlobal = pciemem_RP1;
 		MMAP_size = pciemem_RP1_Size;
 		BaseAddr = 0x00000000;
@@ -3815,7 +3706,7 @@ wiringPiSetup(void)
 	const char *gpiomemModule = gpiomem_BCM;
 
 	if (piRP1Model()) {
-		GetRP1Memory();
+		get_RP1_memory();
 		gpiomemGlobal = pciemem_RP1;
 		gpiomemModule = gpiomem_RP1;
 

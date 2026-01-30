@@ -1,4 +1,4 @@
-/* This file is an exception to the broader license as it is *not* licensed under the LGPL-3.0. */
+/* This file is an exception to the broader licence as it is *not* licensed under the LGPL-3.0. */
 /* Copyright 2026 Roos Catling-Tate
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with or

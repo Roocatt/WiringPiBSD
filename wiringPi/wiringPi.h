@@ -297,7 +297,7 @@ struct WPIWfiStatus {
 		      // if needed
 	unsigned int pinBCM; // gpio as BCM pin
 	int edge; // INT_EDGE_FALLING or INT_EDGE_RISING
-	long long int timeStamp_us; // time stamp in microseconds
+	uint64_t timeStamp_us; // time stamp in microseconds
 };
 
 // extern int  waitForInterrupt    (int pin, int ms);  unknown if still working, disabled for V3.16, please contact
