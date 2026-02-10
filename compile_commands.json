@@ -1,0 +1,332 @@
+[
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/WiringpiV1.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/WiringpiV1.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/WiringpiV1.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/WiringpiV1.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/ads1115.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/ads1115.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/ads1115.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/ads1115.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/bmp180.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/bmp180.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/bmp180.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/bmp180.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/drcNet.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/drcNet.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/drcNet.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/drcNet.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/drcSerial.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/drcSerial.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/drcSerial.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/drcSerial.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/ds18b20.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/ds18b20.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/ds18b20.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/ds18b20.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/dtb.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/dtb.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/dtb.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/dtb.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/gpioirq.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/gpioirq.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/gpioirq.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/gpioirq.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/htu21d.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/htu21d.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/htu21d.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/htu21d.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/max31855.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/max31855.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/max31855.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/max31855.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/max5322.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/max5322.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/max5322.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/max5322.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/mcp23008.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/mcp23008.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/mcp23008.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/mcp23008.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/mcp23016.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/mcp23016.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/mcp23016.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/mcp23016.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/mcp23017.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/mcp23017.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/mcp23017.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/mcp23017.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/mcp23s08.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/mcp23s08.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/mcp23s08.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/mcp23s08.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/mcp23s17.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/mcp23s17.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/mcp23s17.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/mcp23s17.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/mcp3002.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/mcp3002.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/mcp3002.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/mcp3002.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/mcp3004.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/mcp3004.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/mcp3004.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/mcp3004.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/mcp3422.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/mcp3422.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/mcp3422.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/mcp3422.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/mcp4802.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/mcp4802.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/mcp4802.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/mcp4802.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/ofw.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/ofw.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/ofw.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/ofw.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/pcf8574.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/pcf8574.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/pcf8574.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/pcf8574.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/pcf8591.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/pcf8591.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/pcf8591.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/pcf8591.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/piHiPri.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/piHiPri.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/piHiPri.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/piHiPri.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/piThread.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/piThread.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/piThread.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/piThread.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/pseudoPins.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/pseudoPins.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/pseudoPins.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/pseudoPins.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/rht03.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/rht03.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/rht03.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/rht03.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/sn3218.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/sn3218.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/sn3218.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/sn3218.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/softPwm.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/softPwm.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/softPwm.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/softPwm.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/softServo.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/softServo.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/softServo.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/softServo.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/softTone.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/softTone.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/softTone.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/softTone.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/sr595.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/sr595.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/sr595.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/sr595.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/wiringPi.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/wiringPi.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/wiringPi.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/wiringPi.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/wiringPiI2C.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/wiringPiI2C.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/wiringPiI2C.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/wiringPiI2C.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/wiringPiLegacy.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/wiringPiLegacy.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/wiringPiLegacy.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/wiringPiLegacy.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/wiringPiSPI.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/wiringPiSPI.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/wiringPiSPI.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/wiringPiSPI.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/wiringSerial.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/wiringSerial.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/wiringSerial.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/wiringSerial.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/wiringShift.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/wiringShift.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/wiringShift.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/wiringShift.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPi",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DwiringPi_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/wiringPi.dir/src/wpiExtensions.c.o -c /Users/roos/Development/WiringPiBSD/wiringPi/src/wpiExtensions.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPi/src/wpiExtensions.c",
+  "output": "wiringPi/CMakeFiles/wiringPi.dir/src/wpiExtensions.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/devLib",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DdevLib_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/devLib.dir/src/ds1302.c.o -c /Users/roos/Development/WiringPiBSD/devLib/src/ds1302.c",
+  "file": "/Users/roos/Development/WiringPiBSD/devLib/src/ds1302.c",
+  "output": "devLib/CMakeFiles/devLib.dir/src/ds1302.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/devLib",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DdevLib_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/devLib.dir/src/gertboard.c.o -c /Users/roos/Development/WiringPiBSD/devLib/src/gertboard.c",
+  "file": "/Users/roos/Development/WiringPiBSD/devLib/src/gertboard.c",
+  "output": "devLib/CMakeFiles/devLib.dir/src/gertboard.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/devLib",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DdevLib_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/devLib.dir/src/lcd.c.o -c /Users/roos/Development/WiringPiBSD/devLib/src/lcd.c",
+  "file": "/Users/roos/Development/WiringPiBSD/devLib/src/lcd.c",
+  "output": "devLib/CMakeFiles/devLib.dir/src/lcd.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/devLib",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DdevLib_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/devLib.dir/src/lcd128x64.c.o -c /Users/roos/Development/WiringPiBSD/devLib/src/lcd128x64.c",
+  "file": "/Users/roos/Development/WiringPiBSD/devLib/src/lcd128x64.c",
+  "output": "devLib/CMakeFiles/devLib.dir/src/lcd128x64.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/devLib",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DdevLib_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/devLib.dir/src/maxdetect.c.o -c /Users/roos/Development/WiringPiBSD/devLib/src/maxdetect.c",
+  "file": "/Users/roos/Development/WiringPiBSD/devLib/src/maxdetect.c",
+  "output": "devLib/CMakeFiles/devLib.dir/src/maxdetect.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/devLib",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DdevLib_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/devLib.dir/src/piFace.c.o -c /Users/roos/Development/WiringPiBSD/devLib/src/piFace.c",
+  "file": "/Users/roos/Development/WiringPiBSD/devLib/src/piFace.c",
+  "output": "devLib/CMakeFiles/devLib.dir/src/piFace.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/devLib",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DdevLib_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/devLib.dir/src/piFaceOld.c.o -c /Users/roos/Development/WiringPiBSD/devLib/src/piFaceOld.c",
+  "file": "/Users/roos/Development/WiringPiBSD/devLib/src/piFaceOld.c",
+  "output": "devLib/CMakeFiles/devLib.dir/src/piFaceOld.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/devLib",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DdevLib_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/devLib.dir/src/piGlow.c.o -c /Users/roos/Development/WiringPiBSD/devLib/src/piGlow.c",
+  "file": "/Users/roos/Development/WiringPiBSD/devLib/src/piGlow.c",
+  "output": "devLib/CMakeFiles/devLib.dir/src/piGlow.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/devLib",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DdevLib_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/devLib.dir/src/piNes.c.o -c /Users/roos/Development/WiringPiBSD/devLib/src/piNes.c",
+  "file": "/Users/roos/Development/WiringPiBSD/devLib/src/piNes.c",
+  "output": "devLib/CMakeFiles/devLib.dir/src/piNes.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/devLib",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64 -DdevLib_EXPORTS -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fPIC -fcolor-diagnostics -o CMakeFiles/devLib.dir/src/scrollPhat.c.o -c /Users/roos/Development/WiringPiBSD/devLib/src/scrollPhat.c",
+  "file": "/Users/roos/Development/WiringPiBSD/devLib/src/scrollPhat.c",
+  "output": "devLib/CMakeFiles/devLib.dir/src/scrollPhat.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/gpio",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64  -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fcolor-diagnostics -o CMakeFiles/gpio.dir/src/gpio.c.o -c /Users/roos/Development/WiringPiBSD/gpio/src/gpio.c",
+  "file": "/Users/roos/Development/WiringPiBSD/gpio/src/gpio.c",
+  "output": "gpio/CMakeFiles/gpio.dir/src/gpio.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/gpio",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64  -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fcolor-diagnostics -o CMakeFiles/gpio.dir/src/readall.c.o -c /Users/roos/Development/WiringPiBSD/gpio/src/readall.c",
+  "file": "/Users/roos/Development/WiringPiBSD/gpio/src/readall.c",
+  "output": "gpio/CMakeFiles/gpio.dir/src/readall.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPiD",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64  -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fcolor-diagnostics -o CMakeFiles/wiringPiD.dir/src/daemonise.c.o -c /Users/roos/Development/WiringPiBSD/wiringPiD/src/daemonise.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPiD/src/daemonise.c",
+  "output": "wiringPiD/CMakeFiles/wiringPiD.dir/src/daemonise.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPiD",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64  -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fcolor-diagnostics -o CMakeFiles/wiringPiD.dir/src/network.c.o -c /Users/roos/Development/WiringPiBSD/wiringPiD/src/network.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPiD/src/network.c",
+  "output": "wiringPiD/CMakeFiles/wiringPiD.dir/src/network.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPiD",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64  -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fcolor-diagnostics -o CMakeFiles/wiringPiD.dir/src/runRemote.c.o -c /Users/roos/Development/WiringPiBSD/wiringPiD/src/runRemote.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPiD/src/runRemote.c",
+  "output": "wiringPiD/CMakeFiles/wiringPiD.dir/src/runRemote.c.o"
+},
+{
+  "directory": "/Users/roos/Development/WiringPiBSD/wiringPiD",
+  "command": "/usr/bin/clang --target=aarch64-unknown-netbsd --sysroot=/Users/roos/sysroots/netbsd-aarch64  -I/Users/roos/Development/WiringPiBSD/wiringPi/include -fcolor-diagnostics -o CMakeFiles/wiringPiD.dir/src/wiringpid.c.o -c /Users/roos/Development/WiringPiBSD/wiringPiD/src/wiringpid.c",
+  "file": "/Users/roos/Development/WiringPiBSD/wiringPiD/src/wiringpid.c",
+  "output": "wiringPiD/CMakeFiles/wiringPiD.dir/src/wiringpid.c.o"
+}
+]
