@@ -7,5 +7,7 @@ add_library(wiringPi SHARED src/ads1115.c src/bmp180.c src/drcNet.c src/drcSeria
 	src/mcp23s08.c src/mcp23s17.c src/mcp3002.c src/mcp3004.c src/mcp3422.c src/mcp4802.c src/ofw.c src/pcf8574.c
 	src/pcf8591.c src/piHiPri.c src/piThread.c src/pseudoPins.c src/rht03.c src/sn3218.c src/softPwm.c
 	src/softServo.c src/softTone.c src/sr595.c src/wiringPi.c src/wiringPiI2C.c src/wiringPiLegacy.c
-	src/wiringPiSPI.c src/wiringSerial.c src/wiringShift.c src/wpiExtensions.c)
+	src/wiringPiSPI.c src/wiringSerial.c src/wiringShift.c src/wpiExtensions.c
+	src/bsd_gpio.c
+)
 target_include_directories(wiringPi PRIVATE include)

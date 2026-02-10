@@ -75,27 +75,18 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "bsd_gpio.h"
 #include "dtb.h"
 #include "ofw.h"
 
-#include "softTone.h"
 #include "softPwm.h"
+#include "softTone.h"
 
 #include "../../version.h"
 #include "wiringPi.h"
 
 #include "wiringPiLegacy.h"
 #include "gpioirq.h"
-
-
-/* Specific BSD version definitions */
-#ifdef __FreeBSD__
-#define GPIOWRITE GPIOSET
-typedef struct gpio_pin gpio_set_t;
-#else
-typedef struct gpio_set gpio_set_t;
-#endif
-
 
 #define BITULL(x) (1ULL << x)
 

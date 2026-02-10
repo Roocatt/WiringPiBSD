@@ -9,6 +9,7 @@ AlignTrailingComments: false
 AlwaysBreakAfterDefinitionReturnType: All
 AlwaysBreakAfterReturnType: AllDefinitions
 AlwaysBreakTemplateDeclarations: Yes
+IndentExternBlock: NoIndent
 BraceWrapping: 
   AfterCaseLabel: false
   AfterClass: false
